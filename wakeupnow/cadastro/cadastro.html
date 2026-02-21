@@ -1,0 +1,207 @@
+<!-- cadastro/cadastro.html -->
+<!-- Responsabilidade: Cadastro e autenticação de clientes -->
+
+<div class="view" id="view-cadastro">
+
+  <div class="cadastro-layout">
+
+    <!-- LEFT: Form -->
+    <div class="cadastro-form-wrap">
+
+      <!-- TABS: Cadastro / Login -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-register" onclick="switchTab('register')">
+          Criar Conta
+        </button>
+        <button class="auth-tab" id="tab-login" onclick="switchTab('login')">
+          Já tenho conta
+        </button>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="form-register">
+        <div class="section-heading mb-6">
+          <h1>Criar Conta</h1>
+          <p>Preencha seus dados para acessar a plataforma Wake Up Now.</p>
+        </div>
+
+        <div class="card">
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Nome <span class="required">*</span></label>
+              <input type="text" class="form-input" id="reg-nome" placeholder="Seu nome">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Sobrenome <span class="required">*</span></label>
+              <input type="text" class="form-input" id="reg-sobrenome" placeholder="Seu sobrenome">
+            </div>
+          </div>
+
+          <div class="form-group mt-4">
+            <label class="form-label">E-mail <span class="required">*</span></label>
+            <input type="email" class="form-input" id="reg-email" placeholder="seu@email.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">WhatsApp</label>
+            <input type="tel" class="form-input" id="reg-whatsapp" placeholder="(11) 99999-9999">
+            <p class="form-hint">Usado para suporte e notificações importantes.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">CPF <span class="required">*</span></label>
+            <input type="text" class="form-input" id="reg-cpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this)">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Senha <span class="required">*</span></label>
+              <div class="input-password-wrap">
+                <input type="password" class="form-input" id="reg-senha" placeholder="Mín. 8 caracteres" oninput="checkPasswordStrength(this.value)">
+                <button class="password-toggle" onclick="togglePassword('reg-senha')">👁</button>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Confirmar Senha <span class="required">*</span></label>
+              <div class="input-password-wrap">
+                <input type="password" class="form-input" id="reg-senha2" placeholder="Repita a senha">
+                <button class="password-toggle" onclick="togglePassword('reg-senha2')">👁</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Força da senha -->
+          <div class="password-strength-wrap mt-2" id="strengthWrap" style="display:none">
+            <div class="strength-bar">
+              <div class="strength-fill" id="strengthFill"></div>
+            </div>
+            <span class="strength-label" id="strengthLabel"></span>
+          </div>
+
+          <div class="form-group mt-4">
+            <label class="form-label">Plano de Interesse</label>
+            <select class="form-select" id="reg-plano">
+              <option value="">Selecionar plano...</option>
+              <option value="starter">Starter — R$ 49/mês</option>
+              <option value="pro">Pro — R$ 97/mês (Mais popular)</option>
+              <option value="elite">Elite — R$ 197/mês</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Como nos conheceu?</label>
+            <select class="form-select" id="reg-origem">
+              <option value="">Selecionar...</option>
+              <option value="instagram">Instagram</option>
+              <option value="youtube">YouTube</option>
+              <option value="indicacao">Indicação de amigo</option>
+              <option value="google">Google</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+
+          <div class="terms-check">
+            <input type="checkbox" id="reg-terms" class="check-input">
+            <label for="reg-terms" class="check-label">
+              Li e aceito os <a href="#" class="link">Termos de Uso</a> e a <a href="#" class="link">Política de Privacidade</a>.
+            </label>
+          </div>
+
+          <div class="flex gap-3 mt-4">
+            <button class="btn btn-primary w-full" onclick="submitCadastro()" id="btnCadastro">
+              🚀 Criar Minha Conta
+            </button>
+          </div>
+
+          <div class="divider"><span class="divider-label">ou</span></div>
+
+          <div class="social-login">
+            <button class="btn btn-outline w-full" onclick="loginGoogle()">
+              <svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M21.805 10.023H12v3.977h5.617C17.093 16.186 15.014 17.5 12 17.5c-3.037 0-5.5-2.463-5.5-5.5s2.463-5.5 5.5-5.5c1.397 0 2.668.524 3.63 1.38l2.82-2.82C16.634 3.514 14.433 2.5 12 2.5 6.753 2.5 2.5 6.753 2.5 12S6.753 21.5 12 21.5c5.523 0 9.5-3.882 9.5-9.5 0-.644-.065-1.27-.195-1.977z"/></svg>
+              Entrar com Google
+            </button>
+          </div>
+        </div>
+
+        <!-- Validation messages -->
+        <div id="cadastro-error" class="form-error-msg" style="display:none"></div>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="form-login" style="display:none">
+        <div class="section-heading mb-6">
+          <h1>Entrar na Plataforma</h1>
+          <p>Bem-vindo de volta. Acesse sua conta para continuar aprendendo.</p>
+        </div>
+
+        <div class="card">
+          <div class="form-group">
+            <label class="form-label">E-mail <span class="required">*</span></label>
+            <input type="email" class="form-input" id="login-email" placeholder="seu@email.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Senha <span class="required">*</span></label>
+            <div class="input-password-wrap">
+              <input type="password" class="form-input" id="login-senha" placeholder="Sua senha">
+              <button class="password-toggle" onclick="togglePassword('login-senha')">👁</button>
+            </div>
+            <p class="form-hint" style="text-align:right">
+              <a href="#" class="link">Esqueci minha senha</a>
+            </p>
+          </div>
+
+          <button class="btn btn-primary w-full" onclick="submitLogin()" id="btnLogin">
+            ➔ Entrar
+          </button>
+
+          <div class="divider"><span class="divider-label">ou</span></div>
+
+          <button class="btn btn-outline w-full" onclick="loginGoogle()">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M21.805 10.023H12v3.977h5.617C17.093 16.186 15.014 17.5 12 17.5c-3.037 0-5.5-2.463-5.5-5.5s2.463-5.5 5.5-5.5c1.397 0 2.668.524 3.63 1.38l2.82-2.82C16.634 3.514 14.433 2.5 12 2.5 6.753 2.5 2.5 6.753 2.5 12S6.753 21.5 12 21.5c5.523 0 9.5-3.882 9.5-9.5 0-.644-.065-1.27-.195-1.977z"/></svg>
+            Entrar com Google
+          </button>
+        </div>
+
+        <div id="login-error" class="form-error-msg" style="display:none"></div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Benefits panel -->
+    <div class="cadastro-benefits">
+      <div class="benefits-card">
+        <div class="benefits-logo">
+          <svg viewBox="0 0 80 92" width="40" height="46" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="40,2 78,22 78,70 40,90 2,70 2,22" stroke="rgba(200,200,200,0.4)" stroke-width="2" fill="none"/>
+            <polygon points="40,8 72,26 72,66 40,84 8,66 8,26" stroke="rgba(200,200,200,0.2)" stroke-width="1" fill="none"/>
+          </svg>
+          <span>WAKE UP NOW</span>
+        </div>
+        <h2 class="benefits-headline">Sua jornada começa aqui.</h2>
+        <p class="benefits-sub">Junte-se a mais de 3.400 pessoas que já despertaram o seu potencial.</p>
+
+        <ul class="benefits-list">
+          <li><span class="benefit-check">✓</span> Acesso imediato ao conteúdo</li>
+          <li><span class="benefit-check">✓</span> Vídeos em Full HD</li>
+          <li><span class="benefit-check">✓</span> Novos módulos todo mês</li>
+          <li><span class="benefit-check">✓</span> Certificado de conclusão</li>
+          <li><span class="benefit-check">✓</span> Suporte dedicado</li>
+          <li><span class="benefit-check">✓</span> Cancele quando quiser</li>
+        </ul>
+
+        <div class="testimonial">
+          <p>"Essa plataforma mudou minha rotina completamente. Os conteúdos são diretos e aplicáveis."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">MR</div>
+            <div>
+              <strong>Marcos R.</strong>
+              <span>Aluno desde 2023</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

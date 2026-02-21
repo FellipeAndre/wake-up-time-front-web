@@ -1,0 +1,343 @@
+/* ============================================================
+   cadastro/cadastro.css
+   Estilos específicos da View de Cadastro e Login
+   ============================================================ */
+
+
+/* ============================================================
+   LAYOUT PRINCIPAL
+   ============================================================ */
+
+.layout-cadastro {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  align-items: start;
+}
+
+
+/* ============================================================
+   ABAS (Cadastro / Login)
+   ============================================================ */
+
+.container-abas-autenticacao {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.botao-aba-autenticacao {
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.botao-aba-autenticacao.ativo {
+  background: var(--bg-surface);
+  color: var(--silver-light);
+  border: 1px solid var(--border-bright);
+}
+
+
+/* ============================================================
+   CAMPO DE SENHA
+   ============================================================ */
+
+.container-campo-senha {
+  position: relative;
+}
+
+.container-campo-senha .form-input {
+  padding-right: 44px;
+}
+
+.botao-visualizar-senha {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  padding: 4px;
+}
+
+.botao-visualizar-senha:hover {
+  opacity: 1;
+}
+
+
+/* ============================================================
+   FORÇA DA SENHA
+   ============================================================ */
+
+.container-forca-senha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.barra-forca-senha {
+  flex: 1;
+  height: 3px;
+  background: var(--bg-input);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.preenchimento-forca-senha {
+  height: 100%;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  width: 0%;
+}
+
+.preenchimento-forca-senha.fraca   { background: var(--danger);  width: 33%; }
+.preenchimento-forca-senha.media   { background: var(--warning); width: 66%; }
+.preenchimento-forca-senha.forte   { background: var(--success); width: 100%; }
+
+.label-forca-senha {
+  font-size: 0.72rem;
+  white-space: nowrap;
+  font-family: var(--font-display);
+}
+
+.label-forca-senha.fraca  { color: var(--danger); }
+.label-forca-senha.media  { color: var(--warning); }
+.label-forca-senha.forte  { color: var(--success); }
+
+
+/* ============================================================
+   TERMOS E CONDIÇÕES
+   ============================================================ */
+
+.container-termos {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.checkbox-termos {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--silver);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.texto-termos {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.link-termos {
+  color: var(--silver-light);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.link-termos:hover {
+  color: var(--silver);
+}
+
+
+/* ============================================================
+   LOGIN SOCIAL
+   ============================================================ */
+
+.container-login-social {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+/* ============================================================
+   MENSAGEM DE ERRO
+   ============================================================ */
+
+.mensagem-erro-formulario {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: rgba(224,80,80,0.08);
+  border: 1px solid rgba(224,80,80,0.2);
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem;
+  color: var(--danger);
+}
+
+
+/* ============================================================
+   PAINEL LATERAL DE BENEFÍCIOS
+   ============================================================ */
+
+.painel-beneficios-cadastro {
+  position: sticky;
+  top: 0;
+}
+
+.card-beneficios {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-beneficios::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--grad-accent);
+}
+
+.card-beneficios::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  right: -80px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(200,200,200,0.04) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   BLOCO DE BENEFÍCIOS
+   ============================================================ */
+
+.logo-beneficios {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.logo-beneficios span {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+}
+
+.titulo-beneficios {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--silver-light);
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.subtitulo-beneficios {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.lista-beneficios {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.lista-beneficios li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+}
+
+.icone-check-beneficio {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(200,200,200,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: var(--silver-light);
+  border: 1px solid var(--border-bright);
+  flex-shrink: 0;
+}
+
+
+/* ============================================================
+   DEPOIMENTO
+   ============================================================ */
+
+.container-depoimento {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+
+.container-depoimento p {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-style: italic;
+  margin-bottom: 14px;
+}
+
+.autor-depoimento {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar-depoimento {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--grad-silver);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.autor-depoimento strong {
+  display: block;
+  font-size: 0.84rem;
+  color: var(--text-primary);
+}
+
+.autor-depoimento span {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}

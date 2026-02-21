@@ -1,0 +1,240 @@
+<!-- pagamento/pagamento.html -->
+<!-- Responsabilidade: Seleção de plano e checkout de pagamento -->
+
+<div class="view" id="view-pagamento">
+
+  <div class="section-heading">
+    <h1>Escolha seu Plano</h1>
+    <p>Acesso imediato após a confirmação do pagamento. Cancele quando quiser.</p>
+  </div>
+
+  <!-- PLAN SELECTOR -->
+  <div class="pay-plans-row" id="payPlansRow">
+
+    <div class="pay-plan-card" data-plan="starter" onclick="selectPlan('starter', 49)">
+      <div class="pay-plan-check" id="check-starter"></div>
+      <div class="pay-plan-name">Starter</div>
+      <div class="pay-plan-price">R$ 49<span>/mês</span></div>
+      <ul class="pay-plan-features">
+        <li>✓ 2 módulos desbloqueados</li>
+        <li>✓ Vídeos em HD</li>
+        <li>✓ Suporte por e-mail</li>
+        <li class="off">✗ Certificado</li>
+        <li class="off">✗ Módulos avançados</li>
+      </ul>
+    </div>
+
+    <div class="pay-plan-card selected" data-plan="pro" onclick="selectPlan('pro', 97)">
+      <div class="pay-plan-badge">Mais Popular</div>
+      <div class="pay-plan-check active" id="check-pro">✓</div>
+      <div class="pay-plan-name">Pro</div>
+      <div class="pay-plan-price">R$ 97<span>/mês</span></div>
+      <ul class="pay-plan-features">
+        <li>✓ Acesso total</li>
+        <li>✓ Vídeos em Full HD</li>
+        <li>✓ Suporte prioritário</li>
+        <li>✓ Certificado incluso</li>
+        <li>✓ Lançamentos antecipados</li>
+      </ul>
+    </div>
+
+    <div class="pay-plan-card" data-plan="elite" onclick="selectPlan('elite', 197)">
+      <div class="pay-plan-check" id="check-elite"></div>
+      <div class="pay-plan-name">Elite</div>
+      <div class="pay-plan-price">R$ 197<span>/mês</span></div>
+      <ul class="pay-plan-features">
+        <li>✓ Tudo do Pro</li>
+        <li>✓ Mentoria em grupo</li>
+        <li>✓ Comunidade VIP</li>
+        <li>✓ Conteúdos exclusivos</li>
+        <li>✓ Suporte WhatsApp</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- CHECKOUT AREA -->
+  <div class="checkout-layout">
+
+    <!-- Payment Form -->
+    <div class="checkout-form">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Dados de Pagamento</span>
+          <div class="security-badge">🔒 SSL Seguro</div>
+        </div>
+
+        <!-- Payment method tabs -->
+        <div class="pay-method-tabs">
+          <button class="pay-method-tab active" id="tab-cartao" onclick="switchPayMethod('cartao')">
+            💳 Cartão de Crédito
+          </button>
+          <button class="pay-method-tab" id="tab-pix" onclick="switchPayMethod('pix')">
+            ⚡ PIX
+          </button>
+          <button class="pay-method-tab" id="tab-boleto" onclick="switchPayMethod('boleto')">
+            📄 Boleto
+          </button>
+        </div>
+
+        <!-- CARTÃO FORM -->
+        <div id="method-cartao">
+          <div class="form-group mt-4">
+            <label class="form-label">Número do Cartão <span class="required">*</span></label>
+            <input type="text" class="form-input" id="card-number" placeholder="0000 0000 0000 0000"
+              maxlength="19" oninput="maskCard(this)">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nome no Cartão <span class="required">*</span></label>
+            <input type="text" class="form-input" id="card-name" placeholder="NOME SOBRENOME" style="text-transform:uppercase">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Validade <span class="required">*</span></label>
+              <input type="text" class="form-input" id="card-expiry" placeholder="MM/AA"
+                maxlength="5" oninput="maskExpiry(this)">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">CVV <span class="required">*</span></label>
+              <input type="text" class="form-input" id="card-cvv" placeholder="000" maxlength="4">
+            </div>
+          </div>
+
+          <div class="form-group mt-4">
+            <label class="form-label">Parcelamento</label>
+            <select class="form-select" id="card-installments">
+              <option value="1" id="installment-1">1x de R$ 97,00 (sem juros)</option>
+              <option value="3" id="installment-3">3x de R$ 32,33 (sem juros)</option>
+              <option value="6" id="installment-6">6x de R$ 16,17 (sem juros)</option>
+              <option value="12" id="installment-12">12x de R$ 8,08 (com juros)</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary w-full mt-4" onclick="submitPayment('cartao')" id="btnPagar">
+            🔒 Pagar R$ <span id="btnPrice">97,00</span>
+          </button>
+        </div>
+
+        <!-- PIX FORM -->
+        <div id="method-pix" style="display:none">
+          <div class="pix-area" id="pixArea">
+            <div class="pix-instruction">
+              <p>Clique em gerar para criar o QR Code PIX para pagamento.</p>
+              <p class="form-hint mt-2">O acesso é liberado em até 5 minutos após o pagamento.</p>
+            </div>
+            <button class="btn btn-primary mt-4 w-full" onclick="generatePix()">
+              ⚡ Gerar QR Code PIX
+            </button>
+            <div class="pix-qr-wrap" id="pixQrWrap" style="display:none">
+              <div class="pix-qr-placeholder">
+                <div class="qr-mock">
+                  <!-- QR Code visual mock -->
+                  <svg viewBox="0 0 100 100" width="160" height="160">
+                    <rect width="100" height="100" fill="#0e1118"/>
+                    <rect x="10" y="10" width="30" height="30" rx="2" fill="none" stroke="#c8c8c8" stroke-width="3"/>
+                    <rect x="15" y="15" width="20" height="20" fill="#c8c8c8" rx="1"/>
+                    <rect x="60" y="10" width="30" height="30" rx="2" fill="none" stroke="#c8c8c8" stroke-width="3"/>
+                    <rect x="65" y="15" width="20" height="20" fill="#c8c8c8" rx="1"/>
+                    <rect x="10" y="60" width="30" height="30" rx="2" fill="none" stroke="#c8c8c8" stroke-width="3"/>
+                    <rect x="15" y="65" width="20" height="20" fill="#c8c8c8" rx="1"/>
+                    <rect x="45" y="10" width="8" height="8" fill="#c8c8c8"/>
+                    <rect x="45" y="25" width="8" height="8" fill="#c8c8c8"/>
+                    <rect x="45" y="42" width="8" height="8" fill="#c8c8c8"/>
+                    <rect x="60" y="45" width="8" height="8" fill="#c8c8c8"/>
+                    <rect x="75" y="45" width="8" height="8" fill="#c8c8c8"/>
+                    <rect x="60" y="60" width="8" height="8" fill="#c8c8c8"/>
+                    <rect x="75" y="75" width="8" height="8" fill="#c8c8c8"/>
+                    <rect x="45" y="60" width="8" height="8" fill="#c8c8c8"/>
+                  </svg>
+                </div>
+                <p class="pix-key-label">Chave PIX (copia e cola):</p>
+                <div class="pix-key-box" id="pixKey">00020126580014br.gov.bcb.pix...</div>
+                <button class="btn btn-outline btn-sm mt-2" onclick="copyPixKey()">📋 Copiar chave</button>
+                <p class="pix-timer" id="pixTimer">⏱ Expira em <strong>14:59</strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOLETO FORM -->
+        <div id="method-boleto" style="display:none">
+          <div class="boleto-area">
+            <div class="pix-instruction">
+              <p>Gere o boleto e pague em qualquer banco ou casa lotérica.</p>
+              <p class="form-hint mt-2">⚠ O acesso é liberado em até 2 dias úteis após compensação.</p>
+            </div>
+            <div class="form-group mt-4">
+              <label class="form-label">CPF/CNPJ do Pagador <span class="required">*</span></label>
+              <input type="text" class="form-input" id="boleto-cpf" placeholder="000.000.000-00">
+            </div>
+            <button class="btn btn-outline w-full mt-2" onclick="generateBoleto()">
+              📄 Gerar Boleto
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ORDER Summary -->
+    <div class="checkout-summary">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Resumo do Pedido</span>
+        </div>
+
+        <div class="summary-plan">
+          <div class="summary-plan-name" id="summaryPlanName">Plano Pro</div>
+          <div class="summary-plan-price" id="summaryPlanPrice">R$ 97,00<span>/mês</span></div>
+        </div>
+
+        <div class="summary-items">
+          <div class="summary-item">
+            <span>Subtotal</span>
+            <strong id="summarySubtotal">R$ 97,00</strong>
+          </div>
+          <div class="summary-item">
+            <span>Desconto</span>
+            <strong class="discount" id="summaryDiscount">R$ 0,00</strong>
+          </div>
+          <div class="summary-item">
+            <span>Taxa</span>
+            <strong id="summaryFee">R$ 0,00</strong>
+          </div>
+        </div>
+
+        <div class="summary-total">
+          <span>Total</span>
+          <strong id="summaryTotal">R$ 97,00</strong>
+        </div>
+
+        <div class="coupon-area">
+          <input type="text" class="form-input" id="couponInput" placeholder="Código de cupom" style="font-size:0.84rem">
+          <button class="btn btn-outline btn-sm" onclick="applyCoupon()">Aplicar</button>
+        </div>
+
+        <div class="summary-guarantees">
+          <div class="guarantee-item">🔒 Pagamento 100% seguro</div>
+          <div class="guarantee-item">↩ Garantia de 7 dias</div>
+          <div class="guarantee-item">⚡ Acesso imediato</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Success Modal -->
+  <div class="video-modal-overlay" id="successModal">
+    <div class="success-modal">
+      <div class="success-icon">✓</div>
+      <h2>Pagamento Confirmado!</h2>
+      <p>Seu acesso ao plano <strong id="successPlanName">Pro</strong> foi ativado com sucesso.</p>
+      <button class="btn btn-primary" onclick="navigateTo('videos'); closeSuccessModal()">
+        ▶ Começar a Aprender
+      </button>
+    </div>
+  </div>
+
+</div>

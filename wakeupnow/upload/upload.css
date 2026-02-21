@@ -1,0 +1,222 @@
+/* ============================================================
+   upload/upload.css — Estilos exclusivos da view de Upload
+   ============================================================ */
+
+.upload-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── DROPZONE ── */
+.upload-dropzone {
+  padding: 0;
+  min-height: 220px;
+  border: 2px dashed var(--border-bright) !important;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: stretch;
+}
+
+.upload-dropzone.dragover {
+  border-color: var(--silver-mid) !important;
+  background: rgba(160,168,176,0.05);
+  box-shadow: 0 0 40px rgba(160,168,176,0.08);
+}
+
+.dropzone-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 36px 24px;
+}
+
+.dropzone-preview {
+  flex: 1;
+  padding: 20px 24px;
+}
+
+.dropzone-icon {
+  font-size: 2.4rem;
+  margin-bottom: 14px;
+  opacity: 0.7;
+}
+
+.dropzone-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.dropzone-sub {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+}
+
+.dropzone-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* ── PREVIEW META ── */
+.preview-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.preview-meta-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-meta-item strong {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--silver-light);
+}
+
+.preview-meta-item span {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/* ── PROGRESS ── */
+.upload-progress-wrap {
+  margin-top: 12px;
+}
+
+.upload-progress-bar {
+  height: 4px;
+  background: var(--bg-input);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.upload-progress-fill {
+  height: 100%;
+  background: var(--grad-silver);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+.upload-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* ── THUMBNAIL UPLOAD ── */
+.thumb-upload {
+  border: 1px dashed var(--border-bright);
+  border-radius: var(--radius-sm);
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.thumb-upload:hover {
+  border-color: var(--silver-mid);
+  background: rgba(160,168,176,0.04);
+}
+
+#thumbPlaceholder {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 20px;
+}
+
+#thumbPlaceholder span { font-size: 1.6rem; display: block; margin-bottom: 6px; }
+#thumbPlaceholder p { font-size: 0.82rem; margin-bottom: 4px; }
+#thumbPlaceholder small { font-size: 0.72rem; }
+
+/* ── UPLOAD SIDEBAR ── */
+.recent-uploads-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.upload-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+}
+
+.upload-item-thumb {
+  width: 48px; height: 36px;
+  background: var(--bg-surface);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.upload-item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.upload-item-info { flex: 1; overflow: hidden; }
+.upload-item-info strong {
+  display: block;
+  font-size: 0.8rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.upload-item-info span { font-size: 0.7rem; color: var(--text-muted); }
+
+.upload-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.upload-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.upload-stat strong {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--silver-light);
+}
+
+.upload-stat span {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.empty-state-sm {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}

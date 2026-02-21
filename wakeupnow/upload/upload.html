@@ -1,0 +1,161 @@
+<!-- upload/upload.html -->
+<!-- Responsabilidade: Área de upload de vídeos para administradores -->
+
+<div class="view" id="view-upload">
+
+  <div class="section-heading">
+    <h1>Upload de Vídeos</h1>
+    <p>Faça o upload de novos conteúdos e vincule-os a temas e módulos existentes.</p>
+  </div>
+
+  <div class="upload-layout">
+
+    <!-- LEFT: Upload Form -->
+    <div class="upload-main">
+
+      <!-- DROP ZONE -->
+      <div class="card upload-dropzone" id="dropzone">
+        <div class="dropzone-inner" id="dropzoneInner">
+          <div class="dropzone-icon">🎬</div>
+          <h3 class="dropzone-title">Arraste o vídeo aqui</h3>
+          <p class="dropzone-sub">ou clique para selecionar um arquivo</p>
+          <p class="dropzone-hint">Formatos suportados: MP4, MOV, AVI, MKV · Máx. 4GB</p>
+          <button class="btn btn-outline mt-4" onclick="document.getElementById('fileInput').click()">
+            📂 Selecionar Arquivo
+          </button>
+          <input type="file" id="fileInput" accept="video/*" style="display:none" onchange="handleFileSelect(this)">
+        </div>
+
+        <!-- Preview state (hidden initially) -->
+        <div class="dropzone-preview" id="dropzonePreview" style="display:none">
+          <div class="video-preview-thumb">
+            <video id="videoPreview" controls style="width:100%;border-radius:8px;"></video>
+          </div>
+          <div class="preview-meta" id="previewMeta"></div>
+          <button class="btn btn-ghost btn-sm mt-2" onclick="clearFile()">✕ Remover arquivo</button>
+        </div>
+      </div>
+
+      <!-- PROGRESS BAR (hidden until uploading) -->
+      <div class="upload-progress-wrap" id="uploadProgressWrap" style="display:none">
+        <div class="upload-progress-bar">
+          <div class="upload-progress-fill" id="uploadProgressFill"></div>
+        </div>
+        <div class="upload-progress-label">
+          <span id="uploadProgressPct">0%</span>
+          <span id="uploadProgressStatus">Enviando...</span>
+        </div>
+      </div>
+
+      <!-- FORM DETAILS -->
+      <div class="card mt-6">
+        <div class="card-header">
+          <span class="card-title">Informações do Vídeo</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Título do Vídeo <span class="required">*</span></label>
+          <input type="text" class="form-input" id="videoTitle" placeholder="Ex: Introdução ao Módulo 1">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Descrição</label>
+          <textarea class="form-textarea" id="videoDesc" placeholder="Descreva o conteúdo deste vídeo..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Tema <span class="required">*</span></label>
+            <select class="form-select" id="videoTheme" onchange="loadModulesForTheme(this.value)">
+              <option value="">Selecionar tema...</option>
+              <option value="1">Mentalidade e Mindset</option>
+              <option value="2">Produtividade</option>
+              <option value="3">Finanças Pessoais</option>
+              <option value="4">Liderança</option>
+              <option value="5">Saúde e Bem-estar</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Módulo <span class="required">*</span></label>
+            <select class="form-select" id="videoModule">
+              <option value="">Selecione um tema primeiro...</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row mt-4">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Ordem no Módulo</label>
+            <input type="number" class="form-input" id="videoOrder" value="1" min="1">
+            <p class="form-hint">Posição do vídeo dentro do módulo selecionado.</p>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Visibilidade</label>
+            <select class="form-select" id="videoVisibility">
+              <option value="public">🌐 Público (todos os planos)</option>
+              <option value="pro">⭐ Pro e Elite</option>
+              <option value="elite">👑 Somente Elite</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group mt-4">
+          <label class="form-label">Thumbnail (Miniatura)</label>
+          <div class="thumb-upload" onclick="document.getElementById('thumbInput').click()">
+            <img id="thumbPreview" style="display:none; width:100%;border-radius:6px;" alt="thumbnail">
+            <div id="thumbPlaceholder">
+              <span>🖼</span>
+              <p>Clique para adicionar thumbnail</p>
+              <small>JPG, PNG · Recomendado: 1280×720px</small>
+            </div>
+          </div>
+          <input type="file" id="thumbInput" accept="image/*" style="display:none" onchange="handleThumb(this)">
+        </div>
+
+        <div class="flex gap-3 mt-2">
+          <button class="btn btn-primary" onclick="submitUpload()" id="btnUpload" disabled>
+            ⬆ Enviar Vídeo
+          </button>
+          <button class="btn btn-ghost" onclick="clearUploadForm()">Limpar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Recent Uploads -->
+    <div class="upload-sidebar">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Uploads Recentes</span>
+          <span class="tag tag-silver" id="uploadCount">0 vídeos</span>
+        </div>
+
+        <div class="recent-uploads-list" id="recentUploadsList">
+          <div class="empty-state-sm">
+            <p>Nenhum vídeo enviado ainda.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-header">
+          <span class="card-title">Estatísticas</span>
+        </div>
+        <div class="upload-stats">
+          <div class="upload-stat">
+            <strong id="stat-total-videos">0</strong>
+            <span>Vídeos cadastrados</span>
+          </div>
+          <div class="upload-stat">
+            <strong id="stat-total-themes">5</strong>
+            <span>Temas ativos</span>
+          </div>
+          <div class="upload-stat">
+            <strong id="stat-storage">0 MB</strong>
+            <span>Armazenamento usado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,244 @@
+<!-- videos/videos.html -->
+<!-- Responsabilidade: Catálogo de vídeos por temas e módulos -->
+
+<div class="view" id="view-videos">
+
+  <!-- Filters Bar -->
+  <div class="videos-topbar">
+    <div class="section-heading" style="margin-bottom:0">
+      <h1>Conteúdos</h1>
+      <p>Explore os temas e módulos disponíveis na plataforma.</p>
+    </div>
+    <div class="videos-filters">
+      <input type="text" class="form-input" id="searchVideos" placeholder="🔍 Buscar vídeo ou módulo..." style="width:220px" oninput="filterVideos(this.value)">
+      <select class="form-select" id="filterTheme" onchange="filterByTheme(this.value)" style="width:180px">
+        <option value="">Todos os temas</option>
+        <option value="1">Mentalidade</option>
+        <option value="2">Produtividade</option>
+        <option value="3">Finanças</option>
+        <option value="4">Liderança</option>
+        <option value="5">Saúde</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Themes + Modules -->
+  <div class="themes-container" id="themesContainer">
+
+    <!-- THEME 1 -->
+    <div class="theme-block" data-theme="1">
+      <div class="theme-header" onclick="toggleTheme(this)">
+        <div class="theme-icon">🧠</div>
+        <div class="theme-info">
+          <h2 class="theme-name">Mentalidade e Mindset</h2>
+          <span class="theme-meta">2 módulos · 12 vídeos</span>
+        </div>
+        <div class="theme-tags">
+          <span class="tag tag-silver">Todos os planos</span>
+        </div>
+        <div class="theme-toggle">▾</div>
+      </div>
+
+      <div class="modules-list">
+        <!-- Module 1.1 -->
+        <div class="module-card">
+          <div class="module-header" onclick="toggleModule(this)">
+            <div class="module-number">01</div>
+            <div class="module-info">
+              <h3>Crenças Limitantes</h3>
+              <span>6 vídeos · ~48 min</span>
+            </div>
+            <div class="module-progress-wrap">
+              <div class="module-progress-bar"><div class="module-progress-fill" style="width:66%"></div></div>
+              <span class="module-progress-label">4/6</span>
+            </div>
+            <div class="module-toggle">▸</div>
+          </div>
+          <div class="videos-list">
+            <div class="video-item done" onclick="playVideo(this, 'Identificando suas crenças')">
+              <div class="video-thumb">▶</div>
+              <div class="video-info">
+                <strong>Identificando suas crenças</strong>
+                <span>08:24 · Introdução</span>
+              </div>
+              <span class="tag tag-success">✓ Concluído</span>
+            </div>
+            <div class="video-item done" onclick="playVideo(this, 'De onde vêm as crenças?')">
+              <div class="video-thumb">▶</div>
+              <div class="video-info">
+                <strong>De onde vêm as crenças?</strong>
+                <span>11:50 · Teoria</span>
+              </div>
+              <span class="tag tag-success">✓ Concluído</span>
+            </div>
+            <div class="video-item done" onclick="playVideo(this, 'O ciclo da autossabotagem')">
+              <div class="video-thumb">▶</div>
+              <div class="video-info">
+                <strong>O ciclo da autossabotagem</strong>
+                <span>09:15 · Prática</span>
+              </div>
+              <span class="tag tag-success">✓ Concluído</span>
+            </div>
+            <div class="video-item done" onclick="playVideo(this, 'Reescrevendo a narrativa')">
+              <div class="video-thumb">▶</div>
+              <div class="video-info">
+                <strong>Reescrevendo a narrativa</strong>
+                <span>13:40 · Exercício</span>
+              </div>
+              <span class="tag tag-success">✓ Concluído</span>
+            </div>
+            <div class="video-item current" onclick="playVideo(this, 'Afirmações que funcionam')">
+              <div class="video-thumb playing">▶</div>
+              <div class="video-info">
+                <strong>Afirmações que funcionam</strong>
+                <span>07:30 · Prática</span>
+              </div>
+              <span class="tag tag-warning">Em andamento</span>
+            </div>
+            <div class="video-item" onclick="playVideo(this, 'Exercício final do módulo')">
+              <div class="video-thumb">▶</div>
+              <div class="video-info">
+                <strong>Exercício final do módulo</strong>
+                <span>15:00 · Desafio</span>
+              </div>
+              <span class="tag tag-silver">Disponível</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 1.2 -->
+        <div class="module-card">
+          <div class="module-header" onclick="toggleModule(this)">
+            <div class="module-number">02</div>
+            <div class="module-info">
+              <h3>Reprogramação Mental</h3>
+              <span>6 vídeos · ~52 min</span>
+            </div>
+            <div class="module-progress-wrap">
+              <div class="module-progress-bar"><div class="module-progress-fill" style="width:0%"></div></div>
+              <span class="module-progress-label">0/6</span>
+            </div>
+            <div class="module-toggle">▸</div>
+          </div>
+          <div class="videos-list" style="display:none">
+            <div class="video-item" onclick="playVideo(this, 'Neuroplasticidade na prática')">
+              <div class="video-thumb">▶</div>
+              <div class="video-info"><strong>Neuroplasticidade na prática</strong><span>10:20 · Teoria</span></div>
+              <span class="tag tag-silver">Disponível</span>
+            </div>
+            <div class="video-item" onclick="playVideo(this, 'Técnicas de visualização')">
+              <div class="video-thumb">▶</div>
+              <div class="video-info"><strong>Técnicas de visualização</strong><span>12:00 · Prática</span></div>
+              <span class="tag tag-silver">Disponível</span>
+            </div>
+            <div class="video-item locked" onclick="showPaywall()">
+              <div class="video-thumb">🔒</div>
+              <div class="video-info"><strong>Meditação guiada</strong><span>18:00 · Áudio + Vídeo</span></div>
+              <span class="tag tag-warning">Pro+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THEME 2 -->
+    <div class="theme-block" data-theme="2">
+      <div class="theme-header" onclick="toggleTheme(this)">
+        <div class="theme-icon">⚡</div>
+        <div class="theme-info">
+          <h2 class="theme-name">Produtividade</h2>
+          <span class="theme-meta">3 módulos · 18 vídeos</span>
+        </div>
+        <div class="theme-tags">
+          <span class="tag tag-silver">Todos os planos</span>
+        </div>
+        <div class="theme-toggle">▾</div>
+      </div>
+      <div class="modules-list">
+        <div class="module-card">
+          <div class="module-header" onclick="toggleModule(this)">
+            <div class="module-number">01</div>
+            <div class="module-info"><h3>Gestão de Tempo</h3><span>6 vídeos · ~55 min</span></div>
+            <div class="module-progress-wrap">
+              <div class="module-progress-bar"><div class="module-progress-fill" style="width:33%"></div></div>
+              <span class="module-progress-label">2/6</span>
+            </div>
+            <div class="module-toggle">▸</div>
+          </div>
+          <div class="videos-list" style="display:none">
+            <div class="video-item done"><div class="video-thumb">▶</div><div class="video-info"><strong>Os 4 quadrantes de Eisenhower</strong><span>09:00 · Teoria</span></div><span class="tag tag-success">✓</span></div>
+            <div class="video-item done"><div class="video-thumb">▶</div><div class="video-info"><strong>Técnica Pomodoro avançada</strong><span>11:30 · Prática</span></div><span class="tag tag-success">✓</span></div>
+            <div class="video-item"><div class="video-thumb">▶</div><div class="video-info"><strong>Planejamento semanal</strong><span>14:00 · Exercício</span></div><span class="tag tag-silver">Disponível</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THEME 3 -->
+    <div class="theme-block" data-theme="3">
+      <div class="theme-header" onclick="toggleTheme(this)">
+        <div class="theme-icon">💰</div>
+        <div class="theme-info">
+          <h2 class="theme-name">Finanças Pessoais</h2>
+          <span class="theme-meta">2 módulos · 14 vídeos</span>
+        </div>
+        <div class="theme-tags"><span class="tag tag-warning">Pro+</span></div>
+        <div class="theme-toggle">▾</div>
+      </div>
+      <div class="modules-list">
+        <div class="module-card locked-module">
+          <div class="module-header" onclick="showPaywall()">
+            <div class="module-number">🔒</div>
+            <div class="module-info"><h3>Orçamento Pessoal</h3><span>6 vídeos · ~60 min</span></div>
+            <div style="margin-left:auto"><button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); navigateTo('pagamento')">Desbloquear</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THEME 4 -->
+    <div class="theme-block" data-theme="4">
+      <div class="theme-header" onclick="toggleTheme(this)">
+        <div class="theme-icon">👥</div>
+        <div class="theme-info">
+          <h2 class="theme-name">Liderança</h2>
+          <span class="theme-meta">2 módulos · 16 vídeos</span>
+        </div>
+        <div class="theme-tags"><span class="tag tag-warning">Pro+</span></div>
+        <div class="theme-toggle">▾</div>
+      </div>
+      <div class="modules-list">
+        <div class="module-card locked-module">
+          <div class="module-header" onclick="showPaywall()">
+            <div class="module-number">🔒</div>
+            <div class="module-info"><h3>Comunicação e Influência</h3><span>8 vídeos · ~70 min</span></div>
+            <div style="margin-left:auto"><button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); navigateTo('pagamento')">Desbloquear</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- VIDEO MODAL PLAYER -->
+  <div class="video-modal-overlay" id="videoModal" onclick="closeVideoModal(event)">
+    <div class="video-modal">
+      <div class="video-modal-header">
+        <h3 id="videoModalTitle">Título do Vídeo</h3>
+        <button class="btn btn-ghost btn-sm" onclick="closeVideoModal()">✕ Fechar</button>
+      </div>
+      <div class="video-player-area">
+        <div class="video-player-placeholder">
+          <div class="play-btn-big">▶</div>
+          <p id="videoModalSub">Conectar ao backend para streaming</p>
+        </div>
+      </div>
+      <div class="video-modal-footer">
+        <button class="btn btn-ghost btn-sm">⏮ Anterior</button>
+        <button class="btn btn-primary btn-sm">✓ Marcar concluído</button>
+        <button class="btn btn-ghost btn-sm">⏭ Próximo</button>
+      </div>
+    </div>
+  </div>
+
+</div>

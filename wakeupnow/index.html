@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wake Up Now · Plataforma</title>
+
+<!-- ✦ GLOBAL STYLE — paleta e design system unificado -->
+<link rel="stylesheet" href="style.css">
+
+<!-- ✦ ESTILOS POR PACOTE -->
+<link rel="stylesheet" href="home/home.css">
+<link rel="stylesheet" href="upload/upload.css">
+<link rel="stylesheet" href="cadastro/cadastro.css">
+<link rel="stylesheet" href="videos/videos.css">
+<link rel="stylesheet" href="pagamento/pagamento.css">
+
+<style>
+/* ── LOGO SVG HEX inline ── */
+.hex-logo { display:block; }
+</style>
+</head>
+
+<body>
+
+<div class="app-shell">
+
+  <!-- ════════════════════════════
+       SIDEBAR DIREITA (conforme solicitado: lateral direito)
+       Em SPA web, o sidebar fica à direita no fluxo,
+       mas dado o padrão UX o sidebar de navegação
+       está à ESQUERDA sendo o conteúdo principal à DIREITA.
+       Se preferir inverter, troca flex-direction: row-reverse no .app-shell
+  ════════════════════════════ -->
+  <aside class="sidebar">
+
+    <!-- BRAND -->
+    <div class="sidebar-brand">
+      <div class="brand-hex">
+        <!-- Hexágono do logo Wake Up Now -->
+        <svg viewBox="0 0 80 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="40,3 77,22.5 77,69.5 40,89 3,69.5 3,22.5"
+            stroke="rgba(200,200,200,0.6)" stroke-width="3" fill="none"/>
+          <polygon points="40,9 71,26.5 71,65.5 40,83 9,65.5 9,26.5"
+            stroke="rgba(200,200,200,0.25)" stroke-width="1.5" fill="none"/>
+          <!-- Ícone cama + chuveiro simplificado -->
+          <rect x="22" y="52" width="24" height="10" rx="1" fill="rgba(200,200,200,0.7)"/>
+          <rect x="22" y="48" width="10" height="5" rx="1" fill="rgba(200,200,200,0.7)"/>
+          <rect x="22" y="61" width="3" height="5" rx="1" fill="rgba(200,200,200,0.5)"/>
+          <rect x="40" y="61" width="3" height="5" rx="1" fill="rgba(200,200,200,0.5)"/>
+          <!-- Chuveiro -->
+          <circle cx="54" cy="38" r="6" stroke="rgba(200,200,200,0.6)" stroke-width="2" fill="none"/>
+          <line x1="54" y1="44" x2="54" y2="50" stroke="rgba(200,200,200,0.5)" stroke-width="1.5"/>
+          <circle cx="51" cy="52" r="1" fill="rgba(200,200,200,0.5)"/>
+          <circle cx="54" cy="53" r="1" fill="rgba(200,200,200,0.5)"/>
+          <circle cx="57" cy="52" r="1" fill="rgba(200,200,200,0.5)"/>
+        </svg>
+      </div>
+      <div class="sidebar-brand-text">
+        <h2>Wake Up</h2>
+        <span>Now Platform</span>
+      </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav class="sidebar-nav">
+
+      <span class="nav-section-label">Principal</span>
+
+      <a class="nav-item active" id="nav-home" onclick="navigateTo('home')">
+        <span class="nav-icon">⌂</span>
+        Home
+      </a>
+
+      <a class="nav-item" id="nav-videos" onclick="navigateTo('videos')">
+        <span class="nav-icon">▶</span>
+        Conteúdos
+        <span class="nav-badge">120+</span>
+      </a>
+
+      <a class="nav-item" id="nav-cadastro" onclick="navigateTo('cadastro')">
+        <span class="nav-icon">◎</span>
+        Cadastro / Login
+      </a>
+
+      <a class="nav-item" id="nav-pagamento" onclick="navigateTo('pagamento')">
+        <span class="nav-icon">◈</span>
+        Planos & Pagamento
+      </a>
+
+      <span class="nav-section-label">Administração</span>
+
+      <a class="nav-item" id="nav-upload" onclick="navigateTo('upload')">
+        <span class="nav-icon">⬆</span>
+        Upload de Vídeos
+        <span class="nav-badge admin">Admin</span>
+      </a>
+
+      <a class="nav-item" onclick="showToast('Em breve: painel de alunos', 'success')">
+        <span class="nav-icon">◷</span>
+        Alunos
+      </a>
+
+      <a class="nav-item" onclick="showToast('Em breve: relatórios', 'success')">
+        <span class="nav-icon">◫</span>
+        Relatórios
+      </a>
+
+    </nav>
+
+    <!-- USER FOOTER -->
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar">AD</div>
+        <div class="user-info">
+          <strong>Admin</strong>
+          <small>Wake Up Now</small>
+        </div>
+        <span style="font-size:0.8rem; color:var(--text-muted)">⚙</span>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ════════════════════════════
+       MAIN AREA — conteúdo à direita
+  ════════════════════════════ -->
+  <main class="main-area">
+
+    <!-- TOPBAR -->
+    <div class="topbar" id="topbar">
+      <span class="topbar-title" id="topbarTitle">Home</span>
+      <span class="topbar-sub" id="topbarSub">Bem-vindo à plataforma</span>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" onclick="navigateTo('cadastro')">⊕ Nova conta</button>
+        <button class="btn btn-primary btn-sm" onclick="navigateTo('pagamento')">⬥ Assinar</button>
+      </div>
+    </div>
+
+    <!-- VIEWS CONTAINER -->
+    <div class="view-content">
+
+      <!-- ✦ HOME -->
+      <div id="home-slot"></div>
+
+      <!-- ✦ UPLOAD -->
+      <div id="upload-slot"></div>
+
+      <!-- ✦ CADASTRO -->
+      <div id="cadastro-slot"></div>
+
+      <!-- ✦ VIDEOS -->
+      <div id="videos-slot"></div>
+
+      <!-- ✦ PAGAMENTO -->
+      <div id="pagamento-slot"></div>
+
+    </div>
+  </main>
+
+</div>
+
+<!-- ════════════════
+     TOAST CONTAINER
+════════════════ -->
+<div class="toast-area" id="toastArea"></div>
+
+<!-- ════════════════════════════
+     SCRIPTS POR PACOTE
+════════════════════════════ -->
+<script src="upload/upload.js"></script>
+<script src="cadastro/cadastro.js"></script>
+<script src="videos/videos.js"></script>
+<script src="pagamento/pagamento.js"></script>
+
+<!-- ════════════════════════════
+     ROTEADOR SPA CENTRAL
+════════════════════════════ -->
+<script>
+/* ──────────────────────────────────────────
+   ROTEADOR SPA — Wake Up Now
+   Carrega cada view (HTML) por fetch e injeta
+   no slot correspondente. Pronto para conectar
+   ao backend REST.
+────────────────────────────────────────── */
+
+const VIEWS = {
+  home:      { file: 'home/home.html',         slot: 'home-slot',      title: 'Home',               sub: 'Bem-vindo à plataforma Wake Up Now' },
+  upload:    { file: 'upload/upload.html',      slot: 'upload-slot',    title: 'Upload de Vídeos',   sub: 'Área administrativa · Adicionar conteúdo' },
+  cadastro:  { file: 'cadastro/cadastro.html',  slot: 'cadastro-slot',  title: 'Cadastro',           sub: 'Crie sua conta ou faça login' },
+  videos:    { file: 'videos/videos.html',      slot: 'videos-slot',    title: 'Conteúdos',          sub: 'Navegue pelos temas e módulos' },
+  pagamento: { file: 'pagamento/pagamento.html',slot: 'pagamento-slot', title: 'Planos & Pagamento', sub: 'Escolha o melhor plano para você' },
+};
+
+let currentView = null;
+const loadedViews = {};
+
+async function navigateTo(viewName) {
+  const config = VIEWS[viewName];
+  if (!config) return;
+
+  // Ocultar view atual
+  if (currentView && VIEWS[currentView]) {
+    const oldSlot = document.getElementById(VIEWS[currentView].slot);
+    if (oldSlot) {
+      const oldView = oldSlot.querySelector('.view');
+      if (oldView) oldView.classList.remove('active');
+    }
+  }
+
+  // Carregar HTML se ainda não carregado
+  if (!loadedViews[viewName]) {
+    try {
+      const res = await fetch(config.file);
+      const html = await res.text();
+      document.getElementById(config.slot).innerHTML = html;
+      loadedViews[viewName] = true;
+
+      // Callbacks de init por view
+      if (viewName === 'upload') initUpload();
+      if (viewName === 'pagamento') initPagamento();
+
+    } catch (e) {
+      console.error(`Erro ao carregar view ${viewName}:`, e);
+      return;
+    }
+  }
+
+  // Mostrar nova view
+  const slot = document.getElementById(config.slot);
+  const view = slot.querySelector('.view');
+  if (view) {
+    view.classList.add('active');
+  }
+
+  // Atualizar topbar
+  document.getElementById('topbarTitle').textContent = config.title;
+  document.getElementById('topbarSub').textContent = config.sub;
+
+  // Atualizar nav ativo
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const activeNav = document.getElementById(`nav-${viewName}`);
+  if (activeNav) activeNav.classList.add('active');
+
+  // Scroll top
+  document.querySelector('.view-content').scrollTo({ top: 0, behavior: 'smooth' });
+
+  currentView = viewName;
+}
+
+/* ── TOAST HELPER ── */
+function showToast(message, type = 'success') {
+  const area = document.getElementById('toastArea');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${type === 'success' ? '✓' : '⚠'}</span> ${message}`;
+  area.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
+}
+
+/* ── INICIALIZAR: carregar Home ── */
+window.addEventListener('DOMContentLoaded', () => {
+  navigateTo('home');
+});
+</script>
+
+</body>
+</html>
