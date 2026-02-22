@@ -28,6 +28,103 @@
     <!-- React Root -->
     <div id="root"></div>
 
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- 🔐 AUTH SERVICE — Validar usuário na base -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <script>
+        /**
+         * 🔐 AUTH SERVICE · Wake Up Now
+         */
+        const AuthService = {
+          async validateGoogleToken(googleToken) {
+            try {
+              const response = await fetch('/api/auth/google', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: googleToken })
+              });
+              if (!response.ok) throw new Error(`HTTP ${response.status}`);
+              return await response.json();
+            } catch (error) {
+              console.error('Google validation error:', error);
+              throw error;
+            }
+          },
+
+          async validateAppleToken(appleToken) {
+            try {
+              const response = await fetch('/api/auth/apple', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: appleToken })
+              });
+              if (!response.ok) throw new Error(`HTTP ${response.status}`);
+              return await response.json();
+            } catch (error) {
+              console.error('Apple validation error:', error);
+              throw error;
+            }
+          },
+
+          async completeSignup(userData) {
+            try {
+              const response = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+              });
+              if (!response.ok) throw new Error('Erro ao completar cadastro');
+              return await response.json();
+            } catch (error) {
+              console.error('Signup error:', error);
+              throw error;
+            }
+          },
+
+          async loginEmail(email, password) {
+            try {
+              const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+              });
+              if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Erro ao fazer login');
+              }
+              return await response.json();
+            } catch (error) {
+              console.error('Email login error:', error);
+              throw error;
+            }
+          },
+
+          saveAuthData(user, token) {
+            localStorage.setItem('wun_user', JSON.stringify(user));
+            localStorage.setItem('wun_token', token);
+            window.AuthState.login(user, token);
+          },
+
+          getAuthData() {
+            const token = localStorage.getItem('wun_token');
+            const user = localStorage.getItem('wun_user');
+            return { token, user: user ? JSON.parse(user) : null };
+          },
+
+          logout() {
+            localStorage.removeItem('wun_token');
+            localStorage.removeItem('wun_user');
+            window.AuthState.logout();
+          },
+
+          isAuthenticated() {
+            const { token } = this.getAuthData();
+            return !!token;
+          }
+        };
+        window.AuthService = AuthService;
+    </script>
+
     <!-- ════════════════════════════
          SCRIPTS REACT E APLICAÇÃO
     ════════════════════════════ -->
@@ -75,6 +172,23 @@
                 return !!(this.userToken && this.userData);
             }
         };
+
+        // ═══════════════════════════════════════════════════════════
+        // NAVEGAÇÃO GLOBAL (compatibilidade com HTML vanilla)
+        // ═══════════════════════════════════════════════════════════
+        // Esta função é chamada pelos botões HTML e redireciona para React
+        window.setCurrentViewGlobal = null; // Será atribuída pelo React App
+        
+        function navigateTo(view) {
+            console.log('navigateTo:', view);
+            if (window.setCurrentViewGlobal) {
+                window.setCurrentViewGlobal(view);
+            } else {
+                console.warn('setCurrentView não foi inicializado ainda');
+            }
+        }
+        
+        window.navigateTo = navigateTo;
 
         // ═══════════════════════════════════════════════════════════
         // COMPONENTES REACT
@@ -181,7 +295,7 @@
         // NOTA: Em produção, usar Vite ou Webpack para bundle
         
         // Home Component
-        function Home() {
+        function Home({ onClick }) {
             const isAuthenticated = window.AuthState && window.AuthState.isAuthenticated();
             const user = window.AuthState && window.AuthState.userData;
 
@@ -209,7 +323,7 @@
                             
                             {!isAuthenticated ? (
                                 <div style={{display:'flex', gap:'16px', flexWrap:'wrap'}}>
-                                    <button className="btn btn-primary" style={{padding:'14px 32px', fontSize:'1.1rem'}}>✨ Começar agora</button>
+                                    <button onClick={onClick} className="btn btn-primary" style={{padding:'14px 32px', fontSize:'1.1rem'}}>✨ Começar agora</button>
                                     <button className="btn btn-secondary" style={{padding:'14px 32px', fontSize:'1.1rem'}}>📖 Saber mais</button>
                                 </div>
                             ) : (
@@ -465,20 +579,261 @@
             );
         }
 
+        // ═══════════════════════════════════════════════════════════
+        // LOGIN PAGE - OAuth + Email/Senha
+        // ═══════════════════════════════════════════════════════════
+        function LoginPage({ onSignupRequired }) {
+            const [isLoading, setIsLoading] = React.useState(false);
+            const [error, setError] = React.useState('');
+            const [showEmailForm, setShowEmailForm] = React.useState(false);
+            const [emailForm, setEmailForm] = React.useState({ email: '', password: '' });
+
+            const handleGoogleClick = async () => {
+                setIsLoading(true);
+                setError('');
+                try {
+                    const mockGoogleToken = 'google_' + Date.now();
+                    const result = await window.AuthService.validateGoogleToken(mockGoogleToken);
+
+                    if (result.success && !result.isNewUser) {
+                        window.AuthService.saveAuthData(result.user, result.token);
+                        window.location.reload();
+                    } else if (result.isNewUser) {
+                        sessionStorage.setItem('oauth_data', JSON.stringify({
+                            email: result.userData.email,
+                            name: result.userData.name,
+                            provider: 'google',
+                            token: mockGoogleToken
+                        }));
+                        onSignupRequired();
+                    }
+                } catch (err) {
+                    setError('❌ Erro com Google: ' + err.message);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            const handleAppleClick = async () => {
+                setIsLoading(true);
+                setError('');
+                try {
+                    const mockAppleToken = 'apple_' + Date.now();
+                    const result = await window.AuthService.validateAppleToken(mockAppleToken);
+
+                    if (result.success && !result.isNewUser) {
+                        window.AuthService.saveAuthData(result.user, result.token);
+                        window.location.reload();
+                    } else if (result.isNewUser) {
+                        sessionStorage.setItem('oauth_data', JSON.stringify({
+                            email: result.userData.email,
+                            name: result.userData.name,
+                            provider: 'apple',
+                            token: mockAppleToken
+                        }));
+                        onSignupRequired();
+                    }
+                } catch (err) {
+                    setError('❌ Erro com Apple: ' + err.message);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            const handleEmailLogin = async (e) => {
+                e.preventDefault();
+                setIsLoading(true);
+                setError('');
+                try {
+                    const result = await window.AuthService.loginEmail(emailForm.email, emailForm.password);
+                    if (result.success) {
+                        window.AuthService.saveAuthData(result.user, result.token);
+                        window.location.reload();
+                    } else {
+                        setError(result.message || 'Credenciais inválidas');
+                    }
+                } catch (err) {
+                    setError('❌ Erro: ' + err.message);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            return (
+                <div className="view active" style={{padding: 0}}>
+                    <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', height:'100vh', background:'var(--bg-page)'}}>
+                        {/* Lado Esquerdo */}
+                        <div style={{padding:'60px 40px', display:'flex', flexDirection:'column', justifyContent:'center', borderRight:'1px solid var(--border)', background:'linear-gradient(135deg, rgba(200,200,200,0.05) 0%, transparent 100%)'}}>
+                            <h1 style={{fontSize:'3rem', marginBottom:'16px', color:'var(--text-primary)'}}>Bem-vindo de volta</h1>
+                            <p style={{fontSize:'1.2rem', color:'var(--text-secondary)', marginBottom:'40px', lineHeight:1.6}}>Faça login ou crie sua conta para acessar conteúdo exclusivo.</p>
+                            
+                            <div style={{display:'flex', flexDirection:'column', gap:'24px'}}>
+                                <div style={{display:'flex', gap:'12px'}}>
+                                    <div style={{fontSize:'2rem'}}>🎬</div>
+                                    <div><h3 style={{margin:0, color:'var(--text-primary)'}}>Conteúdo Profissional</h3>
+                                    <p style={{margin:'4px 0', color:'var(--text-secondary)', fontSize:'0.9rem'}}>Vídeos de alta qualidade organizados por módulos</p></div>
+                                </div>
+                                <div style={{display:'flex', gap:'12px'}}>
+                                    <div style={{fontSize:'2rem'}}>🔒</div>
+                                    <div><h3 style={{margin:0, color:'var(--text-primary)'}}>Segurança Garantida</h3>
+                                    <p style={{margin:'4px 0', color:'var(--text-secondary)', fontSize:'0.9rem'}}>Autenticação com Google/Apple + senha criptografada</p></div>
+                                </div>
+                                <div style={{display:'flex', gap:'12px'}}>
+                                    <div style={{fontSize:'2rem'}}>⚡</div>
+                                    <div><h3 style={{margin:0, color:'var(--text-primary)'}}>Acesso Imediato</h3>
+                                    <p style={{margin:'4px 0', color:'var(--text-secondary)', fontSize:'0.9rem'}}>Cadastro rápido com OAuth - nenhuma forma tediosa</p></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Lado Direito */}
+                        <div style={{padding:'60px 40px', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+                            <div style={{width:'100%', maxWidth:'380px'}}>
+                                <h2 style={{marginTop:0, marginBottom:'32px', color:'var(--text-primary)', textAlign:'center'}}>Entrar na plataforma</h2>
+
+                                {error && <div style={{background:'rgba(255,109,109,0.1)', color:'#ff6d6d', padding:'12px', borderRadius:'var(--radius-sm)', marginBottom:'20px', fontSize:'0.9rem'}}>{error}</div>}
+
+                                {!showEmailForm ? (
+                                    <>
+                                        <div style={{display:'flex', flexDirection:'column', gap:'12px', marginBottom:'24px'}}>
+                                            <button onClick={handleGoogleClick} disabled={isLoading} className="btn btn-primary" style={{width:'100%'}}>🔵 Continuar com Google</button>
+                                            <button onClick={handleAppleClick} disabled={isLoading} className="btn btn-primary" style={{width:'100%'}}>🍎 Continuar com Apple</button>
+                                        </div>
+
+                                        <div style={{display:'flex', alignItems:'center', gap:'12px', margin:'24px 0'}}><div style={{flex:1, height:'1px', background:'var(--border)'}}></div><span style={{color:'var(--text-muted)', fontSize:'0.85rem'}}>OU</span><div style={{flex:1, height:'1px', background:'var(--border)'}}></div></div>
+
+                                        <button onClick={() => setShowEmailForm(true)} className="btn btn-outline" style={{width:'100%'}}>📧 Usar email/senha</button>
+                                    </>
+                                ) : (
+                                    <form onSubmit={handleEmailLogin} style={{display:'flex', flexDirection:'column', gap:'16px'}}>
+                                        <div><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)', fontSize:'0.9rem'}}>Email</label>
+                                        <input type="email" value={emailForm.email} onChange={(e) => setEmailForm({...emailForm, email:e.target.value})} placeholder="seu@email.com" style={{width:'100%', padding:'10px 12px', background:'var(--bg-input)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)', fontSize:'1rem'}} /></div>
+
+                                        <div><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)', fontSize:'0.9rem'}}>Senha</label>
+                                        <input type="password" value={emailForm.password} onChange={(e) => setEmailForm({...emailForm, password:e.target.value})} placeholder="••••••••" style={{width:'100%', padding:'10px 12px', background:'var(--bg-input)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)', fontSize:'1rem'}} /></div>
+
+                                        <button type="submit" disabled={isLoading} className="btn btn-primary" style={{width:'100%'}}>{isLoading?'⏳ Entrando...':'🔓 Entrar'}</button>
+
+                                        <button type="button" onClick={() => setShowEmailForm(false)} style={{background:'transparent', border:'none', color:'var(--text-muted)', cursor:'pointer', fontSize:'0.9rem'}}>← Voltar aos métodos OAuth</button>
+                                    </form>
+                                )}
+
+                                <p style={{marginTop:'24px', textAlign:'center', color:'var(--text-secondary)', fontSize:'0.9rem'}}>Não tem conta? Vamos criar durante o primeiro login.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // SIGNUP PAGE - Completar cadastro após OAuth
+        // ═══════════════════════════════════════════════════════════
+        function SignupPage({ onLoginClick }) {
+            const oauthData = sessionStorage.getItem('oauth_data') ? JSON.parse(sessionStorage.getItem('oauth_data')) : null;
+            const [isLoading, setIsLoading] = React.useState(false);
+            const [error, setError] = React.useState('');
+            const [cpf, setCpf] = React.useState('');
+            const [password, setPassword] = React.useState('');
+            const [confirmPassword, setConfirmPassword] = React.useState('');
+
+            const maskCPF = (value) => value.replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})/, '$1-$2').substring(0, 14);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setError('');
+
+                if (!cpf || !password || !confirmPassword) {
+                    setError('Preencha todos os campos');
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    setError('Senhas não coincidem');
+                    return;
+                }
+
+                setIsLoading(true);
+                try {
+                    const result = await window.AuthService.completeSignup({
+                        email: oauthData.email,
+                        name: oauthData.name,
+                        cpf: cpf.replace(/\D/g, ''),
+                        password,
+                        provider: oauthData.provider,
+                        token: oauthData.token
+                    });
+
+                    if (result.success) {
+                        window.AuthService.saveAuthData(result.user, result.token);
+                        sessionStorage.removeItem('oauth_data');
+                        window.location.reload();
+                    } else {
+                        setError(result.message || 'Erro ao completar cadastro');
+                    }
+                } catch (err) {
+                    setError('❌ Erro: ' + err.message);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            if (!oauthData) {
+                return <div className="view active" style={{padding:'40px', textAlign:'center'}}>Dados de cadastro não encontrados</div>;
+            }
+
+            return (
+                <div className="view active" style={{padding:'40px'}}>
+                    <div style={{maxWidth:'600px', margin:'0 auto'}}>
+                        <h2 style={{marginTop:0, marginBottom:'24px', color:'var(--text-primary)'}}>Finalize seu cadastro</h2>
+
+                        <div style={{background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'var(--radius)', padding:'24px', marginBottom:'24px'}}>
+                            <p style={{margin:0, color:'var(--text-secondary)'}}>Você está se cadastrando com:</p>
+                            <p style={{margin:'8px 0 0 0', color:'var(--text-primary)', fontWeight:600, fontSize:'1.1rem'}}>{oauthData.email}</p>
+                        </div>
+
+                        {error && <div style={{background:'rgba(255,109,109,0.1)', color:'#ff6d6d', padding:'12px', borderRadius:'var(--radius-sm)', marginBottom:'20px'}}>{error}</div>}
+
+                        <form onSubmit={handleSubmit} style={{display:'flex', flexDirection:'column', gap:'16px'}}>
+                            <div><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)', fontSize:'0.9rem'}}>CPF</label>
+                            <input type="text" value={cpf} onChange={(e) => setCpf(maskCPF(e.target.value))} placeholder="123.456.789-00" style={{width:'100%', padding:'10px 12px', background:'var(--bg-input)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)', fontSize:'1rem'}} /></div>
+
+                            <div><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)', fontSize:'0.9rem'}}>Senha</label>
+                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" style={{width:'100%', padding:'10px 12px', background:'var(--bg-input)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)', fontSize:'1rem'}} /></div>
+
+                            <div><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)', fontSize:'0.9rem'}}>Confirmar Senha</label>
+                            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="••••••••" style={{width:'100%', padding:'10px 12px', background:'var(--bg-input)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)', fontSize:'1rem'}} /></div>
+
+                            <button type="submit" disabled={isLoading} className="btn btn-primary" style={{width:'100%'}}>{isLoading?'⏳ Criando conta...':'✅ Finalizar Cadastro'}</button>
+                        </form>
+
+                        <p style={{marginTop:'20px', textAlign:'center', color:'var(--text-muted)', fontSize:'0.9rem'}}>Já tem conta? <button onClick={onLoginClick} style={{background:'none', border:'none', color:'var(--silver)', cursor:'pointer', fontWeight:600}}>Faça login aqui</button></p>
+                    </div>
+                </div>
+            );
+        }
+
         // App Component Principal
         function App() {
             const [currentView, setCurrentView] = useState('home');
+            
+            // Passa setCurrentView para funções HTML vanilla (buttons onclick)
+            React.useEffect(() => {
+                window.setCurrentViewGlobal = setCurrentView;
+            }, [setCurrentView]);
 
             const renderView = () => {
                 switch(currentView) {
-                    case 'home': return <Home />;
+                    case 'home': return <Home onClick={() => setCurrentView('login')} />;
+                    case 'login': return <LoginPage onSignupRequired={() => setCurrentView('signup')} />;
+                    case 'signup': return <SignupPage onLoginClick={() => setCurrentView('login')} />;
                     case 'cadastro': return <Cadastro />;
                     case 'videos': return <Videos />;
                     case 'pagamento': return <Pagamento />;
                     case 'upload': 
                         if (window.AuthState.isAdmin()) return <Upload />;
-                        return <Home />;
-                    default: return <Home />;
+                        return <Home onClick={() => setCurrentView('login')} />;
+                    default: return <Home onClick={() => setCurrentView('login')} />;
                 }
             };
 
