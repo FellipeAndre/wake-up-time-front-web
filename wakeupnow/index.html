@@ -1,268 +1,518 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wake Up Now · Plataforma</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wake Up Now · Plataforma</title>
 
-<!-- ✦ GLOBAL STYLE — paleta e design system unificado -->
-<link rel="stylesheet" href="style.css">
+    <!-- ✦ GLOBAL STYLE — paleta e design system unificado -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="components.css">
 
-<!-- ✦ ESTILOS POR PACOTE -->
-<link rel="stylesheet" href="home/home.css">
-<link rel="stylesheet" href="upload/upload.css">
-<link rel="stylesheet" href="cadastro/cadastro.css">
-<link rel="stylesheet" href="videos/videos.css">
-<link rel="stylesheet" href="pagamento/pagamento.css">
+    <!-- ✦ ESTILOS POR PACOTE -->
+    <link rel="stylesheet" href="home/home.css">
+    <link rel="stylesheet" href="upload/upload.css">
+    <link rel="stylesheet" href="cadastro/cadastro.css">
+    <link rel="stylesheet" href="videos/videos.css">
+    <link rel="stylesheet" href="pagamento/pagamento.css">
+    <link rel="stylesheet" href="login/login.css">
 
-<style>
-/* ── LOGO SVG HEX inline ── */
-.hex-logo { display:block; }
-</style>
+    <!-- React CDN (Desenvolvimento) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel (Para transpilar JSX) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 
 <body>
+    <!-- React Root -->
+    <div id="root"></div>
 
-<div class="app-shell">
+    <!-- ════════════════════════════
+         SCRIPTS REACT E APLICAÇÃO
+    ════════════════════════════ -->
+    <script type="text/babel">
+        /**
+         * APLICAÇÃO REACT - Wake Up Now
+         * 
+         * Estrutura:
+         * - App.jsx (container principal)
+         * - Sidebar (navegação à direita)
+         * - MainArea (conteúdo)
+         * - Componentes por view (Home, Cadastro, Videos, Upload, Pagamento)
+         */
 
-  <!-- ════════════════════════════
-       SIDEBAR DIREITA (conforme solicitado: lateral direito)
-       Em SPA web, o sidebar fica à direita no fluxo,
-       mas dado o padrão UX o sidebar de navegação
-       está à ESQUERDA sendo o conteúdo principal à DIREITA.
-       Se preferir inverter, troca flex-direction: row-reverse no .app-shell
-  ════════════════════════════ -->
-  <aside class="sidebar">
+        const { useState } = React;
+        const { createRoot } = ReactDOM;
 
-    <!-- BRAND -->
-    <div class="sidebar-brand">
-      <div class="brand-hex">
-        <!-- Hexágono do logo Wake Up Now -->
-        <svg viewBox="0 0 80 92" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="40,3 77,22.5 77,69.5 40,89 3,69.5 3,22.5"
-            stroke="rgba(200,200,200,0.6)" stroke-width="3" fill="none"/>
-          <polygon points="40,9 71,26.5 71,65.5 40,83 9,65.5 9,26.5"
-            stroke="rgba(200,200,200,0.25)" stroke-width="1.5" fill="none"/>
-          <!-- Ícone cama + chuveiro simplificado -->
-          <rect x="22" y="52" width="24" height="10" rx="1" fill="rgba(200,200,200,0.7)"/>
-          <rect x="22" y="48" width="10" height="5" rx="1" fill="rgba(200,200,200,0.7)"/>
-          <rect x="22" y="61" width="3" height="5" rx="1" fill="rgba(200,200,200,0.5)"/>
-          <rect x="40" y="61" width="3" height="5" rx="1" fill="rgba(200,200,200,0.5)"/>
-          <!-- Chuveiro -->
-          <circle cx="54" cy="38" r="6" stroke="rgba(200,200,200,0.6)" stroke-width="2" fill="none"/>
-          <line x1="54" y1="44" x2="54" y2="50" stroke="rgba(200,200,200,0.5)" stroke-width="1.5"/>
-          <circle cx="51" cy="52" r="1" fill="rgba(200,200,200,0.5)"/>
-          <circle cx="54" cy="53" r="1" fill="rgba(200,200,200,0.5)"/>
-          <circle cx="57" cy="52" r="1" fill="rgba(200,200,200,0.5)"/>
-        </svg>
-      </div>
-      <div class="sidebar-brand-text">
-        <h2>Wake Up</h2>
-        <span>Now Platform</span>
-      </div>
-    </div>
+        // ═══════════════════════════════════════════════════════════
+        // SISTEMA DE AUTENTICAÇÃO GLOBAL
+        // ═══════════════════════════════════════════════════════════
 
-    <!-- NAVIGATION -->
-    <nav class="sidebar-nav">
+        window.AuthState = {
+            userData: localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null,
+            userToken: localStorage.getItem('userToken') || null,
 
-      <span class="nav-section-label">Principal</span>
+            login(user, token) {
+                this.userData = user;
+                this.userToken = token;
+                localStorage.setItem('userData', JSON.stringify(user));
+                localStorage.setItem('userToken', token);
+            },
 
-      <a class="nav-item active" id="nav-home" onclick="navigateTo('home')">
-        <span class="nav-icon">⌂</span>
-        Home
-      </a>
+            logout() {
+                this.userData = null;
+                this.userToken = null;
+                localStorage.removeItem('userData');
+                localStorage.removeItem('userToken');
+            },
 
-      <a class="nav-item" id="nav-videos" onclick="navigateTo('videos')">
-        <span class="nav-icon">▶</span>
-        Conteúdos
-        <span class="nav-badge">120+</span>
-      </a>
+            isAdmin() {
+                return this.userData?.role === 'admin' || false;
+            },
 
-      <a class="nav-item" id="nav-cadastro" onclick="navigateTo('cadastro')">
-        <span class="nav-icon">◎</span>
-        Cadastro / Login
-      </a>
+            isAuthenticated() {
+                return !!(this.userToken && this.userData);
+            }
+        };
 
-      <a class="nav-item" id="nav-pagamento" onclick="navigateTo('pagamento')">
-        <span class="nav-icon">◈</span>
-        Planos & Pagamento
-      </a>
+        // ═══════════════════════════════════════════════════════════
+        // COMPONENTES REACT
+        // ═══════════════════════════════════════════════════════════
 
-      <span class="nav-section-label">Administração</span>
+        // Logo SVG Hexágono
+        function LogoHex() {
+            return (
+                <svg viewBox="0 0 80 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="40,3 77,22.5 77,69.5 40,89 3,69.5 3,22.5"
+                        stroke="rgba(200,200,200,0.6)" strokeWidth="3" fill="none"/>
+                    <polygon points="40,9 71,26.5 71,65.5 40,83 9,65.5 9,26.5"
+                        stroke="rgba(200,200,200,0.25)" strokeWidth="1.5" fill="none"/>
+                    <rect x="22" y="52" width="24" height="10" rx="1" fill="rgba(200,200,200,0.7)"/>
+                    <rect x="22" y="48" width="10" height="5" rx="1" fill="rgba(200,200,200,0.7)"/>
+                    <rect x="22" y="61" width="3" height="5" rx="1" fill="rgba(200,200,200,0.5)"/>
+                    <rect x="40" y="61" width="3" height="5" rx="1" fill="rgba(200,200,200,0.5)"/>
+                    <circle cx="54" cy="38" r="6" stroke="rgba(200,200,200,0.6)" strokeWidth="2" fill="none"/>
+                    <line x1="54" y1="44" x2="54" y2="50" stroke="rgba(200,200,200,0.5)" strokeWidth="1.5"/>
+                    <circle cx="51" cy="52" r="1" fill="rgba(200,200,200,0.5)"/>
+                    <circle cx="54" cy="53" r="1" fill="rgba(200,200,200,0.5)"/>
+                    <circle cx="57" cy="52" r="1" fill="rgba(200,200,200,0.5)"/>
+                </svg>
+            );
+        }
 
-      <a class="nav-item" id="nav-upload" onclick="navigateTo('upload')">
-        <span class="nav-icon">⬆</span>
-        Upload de Vídeos
-        <span class="nav-badge admin">Admin</span>
-      </a>
+        // Sidebar à DIREITA
+        function Sidebar({ currentView, onNavigate }) {
+            const isAdmin = window.AuthState.isAdmin();
 
-      <a class="nav-item" onclick="showToast('Em breve: painel de alunos', 'success')">
-        <span class="nav-icon">◷</span>
-        Alunos
-      </a>
+            return (
+                <aside className="sidebar">
+                    <div className="sidebar-brand">
+                        <div className="brand-hex">
+                            <LogoHex />
+                        </div>
+                        <div className="sidebar-brand-text">
+                            <h2>wake up</h2>
+                            <span>now</span>
+                        </div>
+                    </div>
 
-      <a class="nav-item" onclick="showToast('Em breve: relatórios', 'success')">
-        <span class="nav-icon">◫</span>
-        Relatórios
-      </a>
+                    <nav className="sidebar-nav">
+                        <span className="nav-section-label">Principal</span>
+                        <a className={`nav-item ${currentView === 'home' ? 'active' : ''}`} onClick={() => onNavigate('home')}>
+                            <span className="nav-icon">⌂</span>Home
+                        </a>
+                        <a className={`nav-item ${currentView === 'videos' ? 'active' : ''}`} onClick={() => onNavigate('videos')}>
+                            <span className="nav-icon">▶</span>Conteúdos
+                            <span className="nav-badge">120+</span>
+                        </a>
+                        <a className={`nav-item ${currentView === 'cadastro' ? 'active' : ''}`} onClick={() => onNavigate('cadastro')}>
+                            <span className="nav-icon">◎</span>Cadastro/Login
+                        </a>
+                        <a className={`nav-item ${currentView === 'pagamento' ? 'active' : ''}`} onClick={() => onNavigate('pagamento')}>
+                            <span className="nav-icon">◈</span>Planos
+                        </a>
 
-    </nav>
+                        {isAdmin && (
+                            <>
+                                <span className="nav-section-label">Administração</span>
+                                <a className={`nav-item ${currentView === 'upload' ? 'active' : ''}`} onClick={() => onNavigate('upload')}>
+                                    <span className="nav-icon">⬆</span>Upload
+                                    <span className="nav-badge admin">Admin</span>
+                                </a>
+                            </>
+                        )}
+                    </nav>
 
-    <!-- USER FOOTER -->
-    <div class="sidebar-footer">
-      <div class="user-chip">
-        <div class="user-avatar">AD</div>
-        <div class="user-info">
-          <strong>Admin</strong>
-          <small>Wake Up Now</small>
-        </div>
-        <span style="font-size:0.8rem; color:var(--text-muted)">⚙</span>
-      </div>
-    </div>
+                    {window.AuthState.isAuthenticated() && (
+                        <div className="sidebar-footer">
+                            <div className="user-chip">
+                                <div className="user-avatar">{window.AuthState.userData.name.substring(0, 2).toUpperCase()}</div>
+                                <div className="user-info">
+                                    <strong>{window.AuthState.userData.name}</strong>
+                                    <small>{window.AuthState.userData.email}</small>
+                                </div>
+                                <span style={{fontSize:'0.8rem', color:'var(--text-muted)'}}>⚙</span>
+                            </div>
+                        </div>
+                    )}
+                </aside>
+            );
+        }
 
-  </aside>
+        // Topbar
+        function Topbar({ title, subtitle, actions }) {
+            return (
+                <div className="topbar">
+                    <span className="topbar-title">{title}</span>
+                    <span className="topbar-sub">{subtitle}</span>
+                    <div className="topbar-actions">
+                        {actions}
+                    </div>
+                </div>
+            );
+        }
 
-  <!-- ════════════════════════════
-       MAIN AREA — conteúdo à direita
-  ════════════════════════════ -->
-  <main class="main-area">
+        // ═══════════════════════════════════════════════════════════
+        // IMPORTAR COMPONENTES (Dinâmico - Em Produção usar bundler)
+        // ═══════════════════════════════════════════════════════════
+        
+        // Para desenvolvimento: importar código JSX diretamente
+        // NOTA: Em produção, usar Vite ou Webpack para bundle
+        
+        // Home Component
+        function Home() {
+            const isAuthenticated = window.AuthState && window.AuthState.isAuthenticated();
+            const user = window.AuthState && window.AuthState.userData;
 
-    <!-- TOPBAR -->
-    <div class="topbar" id="topbar">
-      <span class="topbar-title" id="topbarTitle">Home</span>
-      <span class="topbar-sub" id="topbarSub">Bem-vindo à plataforma</span>
-      <div class="topbar-actions">
-        <button class="btn btn-ghost btn-sm" onclick="navigateTo('cadastro')">⊕ Nova conta</button>
-        <button class="btn btn-primary btn-sm" onclick="navigateTo('pagamento')">⬥ Assinar</button>
-      </div>
-    </div>
+            const featuredVideos = [
+                { id: 1, title: 'Acordar mais cedo', emoji: '🌅' },
+                { id: 2, title: 'Meditação matinal', emoji: '🧘' },
+                { id: 3, title: 'Exercícios matinais', emoji: '💪' }
+            ];
 
-    <!-- VIEWS CONTAINER -->
-    <div class="view-content">
+            const stats = [
+                { label: 'Vídeos', value: '150+' },
+                { label: 'Usuários ativos', value: '5.2k' },
+                { label: 'Tempo total', value: '500h' }
+            ];
 
-      <!-- ✦ HOME -->
-      <div id="home-slot"></div>
+            return (
+                <div className="view active home-view">
+                    {/* Hero */}
+                    <section className="hero" style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'60px', alignItems:'center', padding:'80px 40px', background:'linear-gradient(135deg, rgba(200,200,200,0.05) 0%, rgba(200,200,200,0.02) 100%)'}}>
+                        <div className="hero-content">
+                            <h1 style={{fontSize:'3rem', margin:'0 0 16px 0', color:'var(--text-primary)', lineHeight:'1.2'}}>Acorde mais cedo</h1>
+                            <p style={{fontSize:'1.3rem', color:'var(--text-secondary)', margin:'0 0 32px 0', lineHeight:'1.5'}}>
+                                Aprenda técnicas comprovadas para acordar mais cedo e transformar sua vida
+                            </p>
+                            
+                            {!isAuthenticated ? (
+                                <div style={{display:'flex', gap:'16px', flexWrap:'wrap'}}>
+                                    <button className="btn btn-primary" style={{padding:'14px 32px', fontSize:'1.1rem'}}>✨ Começar agora</button>
+                                    <button className="btn btn-secondary" style={{padding:'14px 32px', fontSize:'1.1rem'}}>📖 Saber mais</button>
+                                </div>
+                            ) : (
+                                <div style={{background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'32px'}}>
+                                    <h2 style={{margin:'0 0 8px 0', color:'var(--silver)'}}>Bem-vindo, {user?.name}! 👋</h2>
+                                    <p style={{margin:'0 0 20px 0', color:'var(--text-secondary)'}}>Continue sua jornada de aprendizado</p>
+                                    <button className="btn btn-primary" style={{padding:'14px 32px', fontSize:'1.1rem'}}>▶ Assistir aula</button>
+                                </div>
+                            )}
+                        </div>
+                        <div style={{display:'flex', alignItems:'center', justifyContent:'center'}}>
+                            <div style={{fontSize:'8rem', opacity:'0.8'}}>🌅</div>
+                        </div>
+                    </section>
 
-      <!-- ✦ UPLOAD -->
-      <div id="upload-slot"></div>
+                    {/* Stats */}
+                    <section style={{padding:'60px 40px', background:'var(--bg-secondary)'}}>
+                        <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:'30px', maxWidth:'1200px', margin:'0 auto'}}>
+                            {stats.map((stat, idx) => (
+                                <div key={idx} style={{textAlign:'center', padding:'30px', background:'var(--bg-card)', borderRadius:'var(--radius-md)', border:'1px solid var(--border)'}}>
+                                    <div style={{fontSize:'2.5rem', fontWeight:'700', color:'var(--silver)', marginBottom:'8px'}}>{stat.value}</div>
+                                    <div style={{color:'var(--text-secondary)', fontSize:'1rem'}}>{stat.label}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
 
-      <!-- ✦ CADASTRO -->
-      <div id="cadastro-slot"></div>
+                    {/* Featured Videos */}
+                    {isAuthenticated && (
+                        <section style={{padding:'60px 40px', maxWidth:'1200px', margin:'0 auto'}}>
+                            <h2 style={{marginTop:'0', marginBottom:'40px', color:'var(--text-primary)'}}>Conteúdo em destaque</h2>
+                            <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:'24px'}}>
+                                {featuredVideos.map(video => (
+                                    <div key={video.id} style={{background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'24px', textAlign:'center', transition:'all 0.3s', cursor:'pointer'}} onMouseEnter={(e)=>{e.currentTarget.style.borderColor='var(--silver)'; e.currentTarget.style.boxShadow='var(--shadow-md)'}} onMouseLeave={(e)=>{e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.boxShadow='none'}}>
+                                        <div style={{fontSize:'3rem', marginBottom:'16px'}}>{video.emoji}</div>
+                                        <h3 style={{margin:'0 0 16px 0', color:'var(--text-primary)'}}>{video.title}</h3>
+                                        <button className="btn btn-sm btn-primary">Assistir</button>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
 
-      <!-- ✦ VIDEOS -->
-      <div id="videos-slot"></div>
+                    {/* Features */}
+                    <section style={{padding:'60px 40px', background:'var(--bg-secondary)'}}>
+                        <h2 style={{textAlign:'center', marginTop:'0', marginBottom:'50px', color:'var(--text-primary)', fontSize:'2.2rem'}}>Por que Wake Up Now?</h2>
+                        <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(250px, 1fr))', gap:'30px', maxWidth:'1200px', margin:'0 auto'}}>
+                            {[{icon:'📚', title:'Conteúdo estruturado', desc:'Vídeos em sequência lógica para você aprender passo a passo'}, {icon:'🎓', title:'Certificados', desc:'Receba certificados ao concluir os cursos'}, {icon:'👥', title:'Comunidade', desc:'Conecte-se com outras pessoas em busca dos mesmos objetivos'}, {icon:'⏰', title:'Acesso 24/7', desc:'Assista quando quiser, onde quiser'}, {icon:'💰', title:'Preço acessível', desc:'Planos para todos os orçamentos'}, {icon:'🚀', title:'Transformação real', desc:'Resultados comprovados de usuários do mundo inteiro'}].map((f, i) => (
+                                <div key={i} style={{background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'32px', textAlign:'center', transition:'all 0.3s'}} onMouseEnter={(e)=>{e.currentTarget.style.borderColor='var(--silver)'; e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow='var(--shadow-md)'}} onMouseLeave={(e)=>{e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none'}}>
+                                    <div style={{fontSize:'3rem', marginBottom:'16px'}}>{f.icon}</div>
+                                    <h3 style={{margin:'0 0 12px 0', color:'var(--text-primary)', fontSize:'1.2rem'}}>{f.title}</h3>
+                                    <p style={{margin:'0', color:'var(--text-secondary)', lineHeight:'1.6'}}>{f.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
 
-      <!-- ✦ PAGAMENTO -->
-      <div id="pagamento-slot"></div>
+                    {/* CTA */}
+                    <section style={{padding:'80px 40px', background:'linear-gradient(135deg, rgba(200,200,200,0.1) 0%, rgba(200,200,200,0.05) 100%)', textAlign:'center'}}>
+                        <h2 style={{marginTop:'0', marginBottom:'16px', color:'var(--text-primary)', fontSize:'2.5rem'}}>Comece sua transformação hoje</h2>
+                        <p style={{margin:'0 0 32px 0', color:'var(--text-secondary)', fontSize:'1.2rem'}}>Junte-se a milhares de pessoas que já acordam mais cedo</p>
+                        <button className="btn btn-primary" style={{padding:'14px 32px', fontSize:'1.1rem'}}>🚀 Assinar agora</button>
+                    </section>
+                </div>
+            );
+        }
 
-    </div>
-  </main>
+        // Cadastro Component - Refactored
+        function Cadastro() {
+            const [loginForm, setLoginForm] = React.useState({ email: '', password: '' });
+            const [registerForm, setRegisterForm] = React.useState({ firstName: '', lastName: '', email: '', cpf: '', password: '', confirmPassword: '', agreeTerms: false });
+            const [loginError, setLoginError] = React.useState('');
+            const [registerError, setRegisterError] = React.useState('');
+            const [isLoginLoading, setIsLoginLoading] = React.useState(false);
+            const [isRegisterLoading, setIsRegisterLoading] = React.useState(false);
+            const [activeTab, setActiveTab] = React.useState('login');
 
-</div>
+            const maskCPF = (value) => value.replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})/, '$1-$2').substring(0, 14);
 
-<!-- ════════════════
-     TOAST CONTAINER
-════════════════ -->
-<div class="toast-area" id="toastArea"></div>
+            const handleLogin = async (e) => {
+                e.preventDefault();
+                setLoginError('');
+                if (!loginForm.email || !loginForm.password) { setLoginError('Preencha todos os campos'); return; }
+                setIsLoginLoading(true);
+                setTimeout(() => {
+                    window.AuthState.login({ name: 'João Silva', email: loginForm.email, role: 'user' }, 'token_' + Date.now());
+                    window.location.reload();
+                    setIsLoginLoading(false);
+                }, 1000);
+            };
 
-<!-- ════════════════════════════
-     SCRIPTS POR PACOTE
-════════════════════════════ -->
-<script src="upload/upload.js"></script>
-<script src="cadastro/cadastro.js"></script>
-<script src="videos/videos.js"></script>
-<script src="pagamento/pagamento.js"></script>
+            const handleRegister = async (e) => {
+                e.preventDefault();
+                setRegisterError('');
+                if (!registerForm.firstName || !registerForm.email || !registerForm.cpf || !registerForm.password) { setRegisterError('Preencha todos os campos'); return; }
+                setIsRegisterLoading(true);
+                setTimeout(() => {
+                    window.AuthState.login({ name: registerForm.firstName + ' ' + registerForm.lastName, email: registerForm.email, role: 'user' }, 'token_' + Date.now());
+                    window.location.reload();
+                    setIsRegisterLoading(false);
+                }, 1000);
+            };
 
-<!-- ════════════════════════════
-     ROTEADOR SPA CENTRAL
-════════════════════════════ -->
-<script>
-/* ──────────────────────────────────────────
-   ROTEADOR SPA — Wake Up Now
-   Carrega cada view (HTML) por fetch e injeta
-   no slot correspondente. Pronto para conectar
-   ao backend REST.
-────────────────────────────────────────── */
+            return (
+                <div className="view active" style={{padding:'40px', maxWidth:'600px', margin:'0 auto'}}>
+                    <div style={{background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'40px'}}>
+                        <div style={{display:'flex', gap:'16px', marginBottom:'30px'}}>
+                            <button className={`btn btn-sm ${activeTab==='login'?'btn-primary':'btn-secondary'}`} onClick={()=>setActiveTab('login')} style={{flex:1}}>Entrar</button>
+                            <button className={`btn btn-sm ${activeTab==='register'?'btn-primary':'btn-secondary'}`} onClick={()=>setActiveTab('register')} style={{flex:1}}>Criar Conta</button>
+                        </div>
 
-const VIEWS = {
-  home:      { file: 'home/home.html',         slot: 'home-slot',      title: 'Home',               sub: 'Bem-vindo à plataforma Wake Up Now' },
-  upload:    { file: 'upload/upload.html',      slot: 'upload-slot',    title: 'Upload de Vídeos',   sub: 'Área administrativa · Adicionar conteúdo' },
-  cadastro:  { file: 'cadastro/cadastro.html',  slot: 'cadastro-slot',  title: 'Cadastro',           sub: 'Crie sua conta ou faça login' },
-  videos:    { file: 'videos/videos.html',      slot: 'videos-slot',    title: 'Conteúdos',          sub: 'Navegue pelos temas e módulos' },
-  pagamento: { file: 'pagamento/pagamento.html',slot: 'pagamento-slot', title: 'Planos & Pagamento', sub: 'Escolha o melhor plano para você' },
-};
+                        {activeTab === 'login' && (
+                            <form onSubmit={handleLogin}>
+                                <h2 style={{marginTop:'0', color:'var(--text-primary)'}}>Bem-vindo de volta</h2>
+                                {loginError && <div style={{background:'rgba(255,109,109,0.2)', color:'#ff6d6d', padding:'12px', borderRadius:'var(--radius-sm)', marginBottom:'16px'}}>{loginError}</div>}
+                                <div style={{marginBottom:'16px'}}><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)'}}>Email</label><input type="email" value={loginForm.email} onChange={(e)=>setLoginForm({...loginForm, email:e.target.value})} style={{width:'100%', padding:'10px 12px', background:'var(--bg-secondary)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)'}} /></div>
+                                <div style={{marginBottom:'24px'}}><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)'}}>Senha</label><input type="password" value={loginForm.password} onChange={(e)=>setLoginForm({...loginForm, password:e.target.value})} style={{width:'100%', padding:'10px 12px', background:'var(--bg-secondary)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)'}} /></div>
+                                <button type="submit" className="btn btn-primary" style={{width:'100%'}} disabled={isLoginLoading}>{isLoginLoading?'⏳ Entrando...':'Entrar'}</button>
+                            </form>
+                        )}
 
-let currentView = null;
-const loadedViews = {};
+                        {activeTab === 'register' && (
+                            <form onSubmit={handleRegister}>
+                                <h2 style={{marginTop:'0', color:'var(--text-primary)'}}>Criar conta</h2>
+                                {registerError && <div style={{background:'rgba(255,109,109,0.2)', color:'#ff6d6d', padding:'12px', borderRadius:'var(--radius-sm)', marginBottom:'16px'}}>{registerError}</div>}
+                                <div style={{marginBottom:'16px'}}><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)'}}>Primeiro Nome</label><input type="text" value={registerForm.firstName} onChange={(e)=>setRegisterForm({...registerForm, firstName:e.target.value})} style={{width:'100%', padding:'10px 12px', background:'var(--bg-secondary)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)'}} /></div>
+                                <div style={{marginBottom:'16px'}}><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)'}}>Último Nome</label><input type="text" value={registerForm.lastName} onChange={(e)=>setRegisterForm({...registerForm, lastName:e.target.value})} style={{width:'100%', padding:'10px 12px', background:'var(--bg-secondary)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)'}} /></div>
+                                <div style={{marginBottom:'16px'}}><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)'}}>Email</label><input type="email" value={registerForm.email} onChange={(e)=>setRegisterForm({...registerForm, email:e.target.value})} style={{width:'100%', padding:'10px 12px', background:'var(--bg-secondary)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)'}} /></div>
+                                <div style={{marginBottom:'16px'}}><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)'}}>CPF</label><input type="text" value={registerForm.cpf} onChange={(e)=>setRegisterForm({...registerForm, cpf:maskCPF(e.target.value)})} style={{width:'100%', padding:'10px 12px', background:'var(--bg-secondary)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)'}} /></div>
+                                <div style={{marginBottom:'16px'}}><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)'}}>Senha</label><input type="password" value={registerForm.password} onChange={(e)=>setRegisterForm({...registerForm, password:e.target.value})} style={{width:'100%', padding:'10px 12px', background:'var(--bg-secondary)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)'}} /></div>
+                                <div style={{marginBottom:'16px'}}><label style={{display:'block', marginBottom:'6px', color:'var(--text-secondary)'}}>Confirmar Senha</label><input type="password" value={registerForm.confirmPassword} onChange={(e)=>setRegisterForm({...registerForm, confirmPassword:e.target.value})} style={{width:'100%', padding:'10px 12px', background:'var(--bg-secondary)', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', color:'var(--text-primary)'}} /></div>
+                                <button type="submit" className="btn btn-primary" style={{width:'100%'}} disabled={isRegisterLoading}>{isRegisterLoading?'⏳ Criando...':'Criar Conta'}</button>
+                            </form>
+                        )}
+                    </div>
+                </div>
+            );
+        }
 
-async function navigateTo(viewName) {
-  const config = VIEWS[viewName];
-  if (!config) return;
+        // Videos Component - Refactored
+        function Videos() {
+            const [videos] = React.useState([
+                { id: 1, title: 'Como acordar cedo', theme: 'Rotina', duration: '12:30', locked: false, thumbnail: '🎥' },
+                { id: 2, title: 'Técnicas de meditação', theme: 'Bem-estar', duration: '18:45', locked: false, thumbnail: '🧘' },
+                { id: 3, title: 'Exercícios matinais', theme: 'Fitness', duration: '25:00', locked: true, thumbnail: '💪' },
+                { id: 4, title: 'Nutrição para madrugadores', theme: 'Saúde', duration: '15:20', locked: true, thumbnail: '🥗' }
+            ]);
+            const [selectedTheme, setSelectedTheme] = React.useState(null);
+            const [searchQuery, setSearchQuery] = React.useState('');
+            const themes = ['Rotina', 'Bem-estar', 'Fitness', 'Saúde'];
+            const filteredVideos = videos.filter(video => {
+                const matchesTheme = !selectedTheme || video.theme === selectedTheme;
+                const matchesSearch = !searchQuery || video.title.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesTheme && matchesSearch;
+            });
 
-  // Ocultar view atual
-  if (currentView && VIEWS[currentView]) {
-    const oldSlot = document.getElementById(VIEWS[currentView].slot);
-    if (oldSlot) {
-      const oldView = oldSlot.querySelector('.view');
-      if (oldView) oldView.classList.remove('active');
-    }
-  }
+            return (
+                <div className="view active" style={{padding:'40px'}}>
+                    <div style={{maxWidth:'1200px', margin:'0 auto'}}>
+                        <div style={{marginBottom:'30px'}}><input type="text" placeholder="🔍 Buscar vídeo..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} style={{width:'100%', padding:'12px 16px', background:'var(--bg-input)', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', color:'var(--text-primary)', fontSize:'1rem'}} /></div>
+                        <div style={{display:'flex', gap:'10px', marginBottom:'30px', flexWrap:'wrap'}}>
+                            <button className={`btn btn-sm ${!selectedTheme?'btn-primary':'btn-secondary'}`} onClick={()=>setSelectedTheme(null)}>Todos</button>
+                            {themes.map(theme => <button key={theme} className={`btn btn-sm ${selectedTheme===theme?'btn-primary':'btn-secondary'}`} onClick={()=>setSelectedTheme(theme)}>{theme}</button>)}
+                        </div>
+                        <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(250px, 1fr))', gap:'20px'}}>
+                            {filteredVideos.length > 0 ? filteredVideos.map(video => (
+                                <div key={video.id} style={{background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', overflow:'hidden', transition:'all 0.3s'}}>
+                                    <div style={{aspectRatio:'16/9', background:'var(--bg-secondary)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'3rem', position:'relative', overflow:'hidden'}}>{video.thumbnail}{video.locked && <div style={{position:'absolute', top:'8px', right:'8px', fontSize:'1.5rem', background:'rgba(0,0,0,0.5)', padding:'4px 8px', borderRadius:'4px'}}>🔒</div>}</div>
+                                    <div style={{padding:'16px'}}><h3 style={{margin:'0 0 8px 0', fontSize:'1rem', color:'var(--text-primary)', lineHeight:'1.3'}}>{video.title}</h3><p style={{fontSize:'0.8rem', color:'var(--text-muted)', margin:'0 0 8px 0'}}>{video.theme}</p><p style={{fontSize:'0.9rem', color:'var(--text-muted)', margin:'0 0 12px 0'}}>⏱️ {video.duration}</p><button className={`btn btn-sm ${video.locked?'btn-secondary':'btn-primary'}`}>{video.locked?'🔒 Bloqueado':'▶ Assistir'}</button></div>
+                                </div>
+                            )) : <p style={{gridColumn:'1/-1', textAlign:'center', color:'var(--text-muted)'}}>Nenhum vídeo encontrado</p>}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
 
-  // Carregar HTML se ainda não carregado
-  if (!loadedViews[viewName]) {
-    try {
-      const res = await fetch(config.file);
-      const html = await res.text();
-      document.getElementById(config.slot).innerHTML = html;
-      loadedViews[viewName] = true;
+        // Pagamento Component - Refactored
+        function Pagamento() {
+            const [selectedPlan, setSelectedPlan] = React.useState(null);
+            const [paymentMethod, setPaymentMethod] = React.useState('card');
+            const plans = [
+                { id: 'starter', name: 'Starter', price: 29.90, features: ['✓ 20 vídeos', '✓ Suporte por email', '✗ Certificado', '✗ Comunidade'] },
+                { id: 'pro', name: 'Pro', price: 79.90, featured: true, features: ['✓ Todos os vídeos', '✓ Suporte prioritário', '✓ Certificado', '✗ Comunidade'] },
+                { id: 'elite', name: 'Elite', price: 149.90, features: ['✓ Todos os vídeos', '✓ Suporte 24/7', '✓ Certificado premium', '✓ Comunidade'] }
+            ];
+            const selectedPlanData = selectedPlan ? plans.find(p => p.id === selectedPlan) : null;
 
-      // Callbacks de init por view
-      if (viewName === 'upload') initUpload();
-      if (viewName === 'pagamento') initPagamento();
+            return (
+                <div className="view active" style={{padding:'40px'}}>
+                    <div style={{maxWidth:'1200px', margin:'0 auto', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'40px'}}>
+                        <div><h2 style={{marginTop:'0', marginBottom:'30px', color:'var(--text-primary)'}}>Escolha seu plano</h2><div style={{display:'flex', flexDirection:'column', gap:'20px'}}>{plans.map(plan=><div key={plan.id} style={{background:'var(--bg-card)', border:`2px solid ${selectedPlan===plan.id?'var(--silver)':'var(--border)'}`, borderRadius:'var(--radius-md)', padding:'24px', cursor:'pointer', transition:'all 0.3s', background: selectedPlan===plan.id?'var(--bg-secondary)':'var(--bg-card)'}} onClick={()=>setSelectedPlan(plan.id)}>{plan.featured && <div style={{position:'absolute', top:'-12px', right:'20px', background:'var(--silver)', color:'var(--charcoal)', padding:'4px 12px', borderRadius:'12px', fontSize:'0.8rem', fontWeight:'600'}}>⭐ Popular</div>}<h3 style={{margin:'0 0 8px 0', fontSize:'1.5rem', color:'var(--text-primary)'}}>{plan.name}</h3><div style={{margin:'20px 0', fontSize:'2rem', fontWeight:'700', color:'var(--silver)'}}>R$ {plan.price.toFixed(2)}<span style={{color:'var(--text-muted)', fontSize:'1rem'}}>/mês</span></div><ul style={{listStyle:'none', padding:'0', margin:'20px 0'}}>{plan.features.map((f,i)=><li key={i} style={{padding:'8px 0', color:'var(--text-secondary)'}}>{f}</li>)}</ul><button className="btn btn-sm btn-primary" style={{width:'100%'}} onClick={()=>setSelectedPlan(plan.id)}>Escolher</button></div>)}</div></div>
+                        {selectedPlanData && (
+                            <div style={{position:'sticky', top:'40px'}}>
+                                <div style={{background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'24px'}}>
+                                    <h3 style={{marginTop:'0', color:'var(--text-primary)'}}>Resumo</h3>
+                                    <div style={{background:'var(--bg-secondary)', borderRadius:'var(--radius-sm)', padding:'16px', margin:'20px 0'}}>
+                                        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'8px 0', color:'var(--text-secondary)'}}><span>Plano</span><strong style={{color:'var(--text-primary)'}}>{selectedPlanData.name}</strong></div>
+                                        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'8px 0', color:'var(--text-secondary)'}}><span>Valor</span><strong style={{color:'var(--text-primary)'}}>R$ {selectedPlanData.price.toFixed(2)}</strong></div>
+                                        <div style={{height:'1px', background:'var(--border)', margin:'12px 0'}}></div>
+                                        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'12px 0', fontSize:'1.1rem', color:'var(--text-primary)'}}><span>Total</span><strong>R$ {selectedPlanData.price.toFixed(2)}</strong></div>
+                                    </div>
+                                    <div style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:'10px', margin:'20px 0'}}><button className={`btn btn-sm ${paymentMethod==='card'?'btn-primary':'btn-secondary'}`} onClick={()=>setPaymentMethod('card')}>💳 Cartão</button><button className={`btn btn-sm ${paymentMethod==='pix'?'btn-primary':'btn-secondary'}`} onClick={()=>setPaymentMethod('pix')}>🔐 PIX</button><button className={`btn btn-sm btn-secondary`} disabled>📄 Boleto</button></div>
+                                    <button className="btn btn-primary" style={{width:'100%', marginTop:'20px'}}>Confirmar Pagamento</button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
 
-    } catch (e) {
-      console.error(`Erro ao carregar view ${viewName}:`, e);
-      return;
-    }
-  }
+        // Upload Component - Admin Only
+        function Upload() {
+            if (!window.AuthState.isAdmin()) {
+                return <div className="view active" style={{padding:'40px', textAlign:'center'}}><h2>🔒 Acesso Restrito</h2><p>Apenas administradores podem acessar esta área.</p></div>;
+            }
 
-  // Mostrar nova view
-  const slot = document.getElementById(config.slot);
-  const view = slot.querySelector('.view');
-  if (view) {
-    view.classList.add('active');
-  }
+            const [isDragging, setIsDragging] = React.useState(false);
+            const [selectedFile, setSelectedFile] = React.useState(null);
+            const [uploadedVideos] = React.useState([
+                { id: 1, title: 'Como acordar cedo', theme: 'Rotina', uploadedAt: '2024-01-15' },
+                { id: 2, title: 'Meditação Matinal', theme: 'Bem-estar', uploadedAt: '2024-01-14' }
+            ]);
 
-  // Atualizar topbar
-  document.getElementById('topbarTitle').textContent = config.title;
-  document.getElementById('topbarSub').textContent = config.sub;
+            const handleDrop = (e) => {
+                e.preventDefault();
+                setIsDragging(false);
+                if (e.dataTransfer.files.length > 0) {
+                    const file = e.dataTransfer.files[0];
+                    if (file.type.startsWith('video/')) {
+                        setSelectedFile(file);
+                    }
+                }
+            };
 
-  // Atualizar nav ativo
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  const activeNav = document.getElementById(`nav-${viewName}`);
-  if (activeNav) activeNav.classList.add('active');
+            return (
+                <div className="view active" style={{padding:'40px'}}>
+                    <div style={{maxWidth:'1200px', margin:'0 auto', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'40px'}}>
+                        <div style={{display:'flex', flexDirection:'column', gap:'20px'}}>
+                            <div style={{border:'2px dashed var(--border)', borderRadius:'var(--radius-md)', padding:'40px', textAlign:'center', background:'var(--bg-secondary)', cursor:'pointer'}} onDragOver={(e)=>{e.preventDefault(); setIsDragging(true)}} onDragLeave={(e)=>{e.preventDefault(); setIsDragging(false)}} onDrop={handleDrop} style={{border:`2px dashed ${isDragging?'var(--silver)':'var(--border)'}`, borderRadius:'var(--radius-md)', padding:'40px', textAlign:'center', background: isDragging?'var(--bg-input)':'var(--bg-secondary)', cursor:'pointer', transition:'all 0.3s'}}>
+                                {!selectedFile ? (<><div style={{fontSize:'3rem', marginBottom:'16px'}}>📹</div><h3 style={{margin:'0 0 8px 0'}}>Arrastar vídeo aqui</h3><p>ou</p><label style={{cursor:'pointer'}}><input type="file" accept="video/*" onChange={(e)=>e.target.files[0] && setSelectedFile(e.target.files[0])} style={{display:'none'}} /><span className="btn btn-sm btn-primary">Selecionar arquivo</span></label></>) : (<><div style={{display:'flex', alignItems:'center', gap:'16px', padding:'20px', background:'var(--bg-secondary)', borderRadius:'var(--radius-sm)'}}><div style={{fontSize:'2rem', color:'var(--silver)'}}>✓</div><div><p style={{margin:'0', color:'var(--text-primary)', fontWeight:'500'}}>{selectedFile.name}</p></div></div></>)}
+                            </div>
+                        </div>
+                        <div style={{padding:'24px', background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', maxHeight:'600px', overflowY:'auto'}}>
+                            <h3 style={{marginTop:'0', color:'var(--text-primary)'}}>Vídeos Enviados ({uploadedVideos.length})</h3>
+                            <table style={{width:'100%', borderCollapse:'collapse', fontSize:'0.9rem'}}>
+                                <tbody>{uploadedVideos.map(video=><tr key={video.id} style={{borderBottom:'1px solid var(--border)'}}><td style={{padding:'12px', color:'var(--text-primary)', fontWeight:'500'}}>{video.title}</td><td style={{padding:'12px', color:'var(--text-secondary)'}}>{video.theme}</td><td style={{padding:'12px', color:'var(--text-secondary)'}}>{video.uploadedAt}</td></tr>)}</tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
 
-  // Scroll top
-  document.querySelector('.view-content').scrollTo({ top: 0, behavior: 'smooth' });
+        // App Component Principal
+        function App() {
+            const [currentView, setCurrentView] = useState('home');
 
-  currentView = viewName;
-}
+            const renderView = () => {
+                switch(currentView) {
+                    case 'home': return <Home />;
+                    case 'cadastro': return <Cadastro />;
+                    case 'videos': return <Videos />;
+                    case 'pagamento': return <Pagamento />;
+                    case 'upload': 
+                        if (window.AuthState.isAdmin()) return <Upload />;
+                        return <Home />;
+                    default: return <Home />;
+                }
+            };
 
-/* ── TOAST HELPER ── */
-function showToast(message, type = 'success') {
-  const area = document.getElementById('toastArea');
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.innerHTML = `<span>${type === 'success' ? '✓' : '⚠'}</span> ${message}`;
-  area.appendChild(toast);
-  setTimeout(() => toast.remove(), 4000);
-}
+            const topbarConfig = {
+                home: { title: 'Home', sub: 'Bem-vindo à plataforma' },
+                cadastro: { title: 'Cadastro', sub: 'Crie sua conta ou faça login' },
+                videos: { title: 'Conteúdos', sub: 'Navegue pelos temas e módulos' },
+                pagamento: { title: 'Planos & Pagamento', sub: 'Escolha o melhor plano' },
+                upload: { title: 'Upload de Vídeos', sub: 'Área administrativa' }
+            };
 
-/* ── INICIALIZAR: carregar Home ── */
-window.addEventListener('DOMContentLoaded', () => {
-  navigateTo('home');
-});
-</script>
+            const config = topbarConfig[currentView] || topbarConfig.home;
+
+            return (
+                <div className="app-shell">
+                    <Sidebar currentView={currentView} onNavigate={setCurrentView} />
+                    <main className="main-area">
+                        <Topbar 
+                            title={config.title} 
+                            subtitle={config.sub}
+                            actions={<></>}
+                        />
+                        <div className="view-content">
+                            {renderView()}
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        // Renderizar App
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 
 </body>
 </html>

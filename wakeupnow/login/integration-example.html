@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAKE UP NOW - Integração React</title>
+    
+    <!-- CSS Global -->
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="login.css">
+    
+    <!-- React CDN (Desenvolvimento) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+</head>
+<body>
+    <div id="root">
+        <div id="viewLogin" class="view"></div>
+    </div>
+
+    <script type="module">
+        /**
+         * EXEMPLO: Integração do componente Login React com roteador vanilla
+         * 
+         * Este exemplo mostra como:
+         * 1. Montar o componente React
+         * 2. Executar callback quando login bem-sucedido
+         * 3. Integrar com localStorage e contexto de autenticação
+         */
+
+        // ═══════════════════════════════════════════════════════════
+        // 1. IMPORTAR COMPONENTE
+        // ═══════════════════════════════════════════════════════════
+
+        import { mountLoginComponent, unmountLoginComponent } from './mount-login.js';
+
+        // ═══════════════════════════════════════════════════════════
+        // 2. DEFINIR CONTEXTO DE AUTENTICAÇÃO GLOBAL
+        // ═══════════════════════════════════════════════════════════
+
+        window.AuthContext = {
+            userData: null,
+            userToken: null,
+
+            /**
+             * Carrega dados do usuário e token do localStorage
+             */
+            init() {
+                const storedToken = localStorage.getItem('userToken');
+                const storedUser = localStorage.getItem('userData');
+
+                if (storedToken && storedUser) {
+                    this.userToken = storedToken;
+                    this.userData = JSON.parse(storedUser);
+                    return true;
+                }
+                return false;
+            },
+
+            /**
+             * Salva autenticação após login bem-sucedido
+             */
+            setAuth(userData, token) {
+                this.userData = userData;
+                this.userToken = token;
+                localStorage.setItem('userData', JSON.stringify(userData));
+                localStorage.setItem('userToken', token);
+                console.log('✅ Autenticação armazenada:', userData.email);
+            },
+
+            /**
+             * Limpa autenticação ao fazer logout
+             */
+            clear() {
+                this.userData = null;
+                this.userToken = null;
+                localStorage.removeItem('userData');
+                localStorage.removeItem('userToken');
+                console.log('❌ Autenticação removida');
+            },
+
+            /**
+             * Verifica se usuário está autenticado
+             */
+            isAuthenticated() {
+                return !!(this.userToken && this.userData);
+            }
+        };
+
+        // Carregar dados salvos
+        AuthContext.init();
+
+        // ═══════════════════════════════════════════════════════════
+        // 3. GERENCIADOR DE ROTEAMENTO
+        // ═══════════════════════════════════════════════════════════
+
+        window.Router = {
+            currentView: 'login',
+
+            /**
+             * Navega para uma view específica
+             */
+            navigateTo(viewName) {
+                console.log(`🔄 Navegando para: ${viewName}`);
+                this.currentView = viewName;
+
+                // Limpar view anterior
+                const viewElement = document.querySelector('.view.active');
+                if (viewElement) {
+                    viewElement.classList.remove('active');
+                    unmountLoginComponent(); // Limpar React se necessário
+                }
+
+                // Carregar nova view baseado no nome
+                this.loadView(viewName);
+            },
+
+            /**
+             * Carrega view específica
+             */
+            loadView(viewName) {
+                const viewElement = document.getElementById(`view${this.capitalizeFirst(viewName)}`);
+
+                if (!viewElement) {
+                    console.error(`View ${viewName} não encontrada`);
+                    return;
+                }
+
+                viewElement.classList.add('active');
+
+                // Montar componentes específicos
+                if (viewName === 'login') {
+                    this.loadLoginView();
+                } else if (viewName === 'home') {
+                    this.loadHomeView();
+                }
+            },
+
+            /**
+             * Carrega view de LOGIN
+             */
+            loadLoginView() {
+                const handleLoginSuccess = (userData) => {
+                    // ✅ Usuário fez login com sucesso
+                    AuthContext.setAuth(userData, userData.token);
+
+                    // Mostrar feedback
+                    console.log('✅ Login bem-sucedido:', userData.name);
+
+                    // Redirecionar para home após 1 segundo
+                    setTimeout(() => {
+                        this.navigateTo('home');
+                    }, 1000);
+                };
+
+                // Montar componente React na view
+                mountLoginComponent('viewLogin', handleLoginSuccess);
+            },
+
+            /**
+             * Carrega view de HOME
+             */
+            loadHomeView() {
+                if (!AuthContext.isAuthenticated()) {
+                    console.log('⚠️ Acesso negado. Redirecionando para login...');
+                    this.navigateTo('login');
+                    return;
+                }
+
+                // Renderizar conteúdo da home
+                const viewElement = document.getElementById('viewHome');
+                if (viewElement) {
+                    viewElement.innerHTML = `
+                        <div class="container">
+                            <h1>Bem-vindo, ${AuthContext.userData.name}!</h1>
+                            <p>E-mail: ${AuthContext.userData.email}</p>
+                            <button onclick="localStorage.clear(); location.reload()">Logout</button>
+                        </div>
+                    `;
+                }
+            },
+
+            /**
+             * Auxiliar para capitalizar primeira letra
+             */
+            capitalizeFirst(str) {
+                return str.charAt(0).toUpperCase() + str.slice(1);
+            }
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 4. INICIALIZAR ROTEADOR
+        // ═══════════════════════════════════════════════════════════
+
+        // Determinar view inicial
+        const initialView = AuthContext.isAuthenticated() ? 'home' : 'login';
+        Router.navigateTo(initialView);
+
+        // Expor Router globalmente para uso em onclick handlers
+        window.Router = Router;
+        window.AuthContext = AuthContext;
+    </script>
+
+    <style>
+        /* Adicionar estilos para views */
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</body>
+</html>
+
+<!-- 
+    EXEMPLOS DE USO:
+    
+    1. NAVEGAR PROGRAMATICAMENTE:
+    ────────────────────────────────────
+    Router.navigateTo('login');
+    Router.navigateTo('home');
+    
+    2. VERIFICAR SE AUTENTICADO:
+    ────────────────────────────────────
+    if (AuthContext.isAuthenticated()) {
+        console.log('Usuário logado:', AuthContext.userData.email);
+    }
+    
+    3. FAZER LOGOUT:
+    ────────────────────────────────────
+    AuthContext.clear();
+    Router.navigateTo('login');
+    
+    4. OBTER TOKEN PARA REQUISIÇÕES:
+    ────────────────────────────────────
+    const headers = {
+        'Authorization': `Bearer ${AuthContext.userToken}`
+    };
+    
+    5. REDIRECIONAMENTO CONDICIONAL NO HTML:
+    ────────────────────────────────────
+    <button onclick="
+        if (AuthContext.isAuthenticated()) {
+            Router.navigateTo('home');
+        } else {
+            Router.navigateTo('login');
+        }
+    ">Acessar</button>
+-->

@@ -1,0 +1,306 @@
+<!-- login/login.html -->
+<!-- 
+  RESPONSABILIDADE: Tela de Login/Cadastro
+  Esta tela permite que o usuário entre na plataforma ou crie uma nova conta
+  usando email e senha. Integra com o backend via API REST.
+-->
+
+<div class="view" id="viewLogin">
+
+  <!-- CONTAINER PRINCIPAL DO LOGIN -->
+  <div class="loginContainer">
+
+    <!-- LADO ESQUERDO: FORMULÁRIO -->
+    <div class="loginFormSection">
+
+      <!-- HEADER COM LOGO -->
+      <div class="loginHeader">
+        <div class="logoBox">
+          <svg viewBox="0 0 80 92" fill="none" xmlns="http://www.w3.org/2000/svg" class="logoBrand">
+            <polygon points="40,3 77,22.5 77,69.5 40,89 3,69.5 3,22.5"
+              stroke="rgba(200,200,200,0.6)" stroke-width="3" fill="none"/>
+            <polygon points="40,9 71,26.5 71,65.5 40,83 9,65.5 9,26.5"
+              stroke="rgba(200,200,200,0.25)" stroke-width="1.5" fill="none"/>
+            <rect x="22" y="52" width="24" height="10" rx="1" fill="rgba(200,200,200,0.7)"/>
+            <rect x="22" y="48" width="10" height="5" rx="1" fill="rgba(200,200,200,0.7)"/>
+            <rect x="22" y="61" width="3" height="5" rx="1" fill="rgba(200,200,200,0.5)"/>
+            <rect x="40" y="61" width="3" height="5" rx="1" fill="rgba(200,200,200,0.5)"/>
+            <circle cx="54" cy="38" r="6" stroke="rgba(200,200,200,0.6)" stroke-width="2" fill="none"/>
+            <line x1="54" y1="44" x2="54" y2="50" stroke="rgba(200,200,200,0.5)" stroke-width="1.5"/>
+            <circle cx="51" cy="52" r="1" fill="rgba(200,200,200,0.5)"/>
+            <circle cx="54" cy="53" r="1" fill="rgba(200,200,200,0.5)"/>
+            <circle cx="57" cy="52" r="1" fill="rgba(200,200,200,0.5)"/>
+          </svg>
+        </div>
+        <h1 class="brandName">WAKE UP NOW</h1>
+        <p class="brandSlogan">Desperte seu potencial</p>
+      </div>
+
+      <!-- ABAS: LOGIN vs CADASTRO -->
+      <div class="authTabsContainer">
+        <button class="authTabButton authTabButtonActive" id="tabLoginButton" onclick="switchAuthTab('login')">
+          Entrar
+        </button>
+        <button class="authTabButton" id="tabRegisterButton" onclick="switchAuthTab('register')">
+          Criar Conta
+        </button>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           FORMULÁRIO DE LOGIN
+           Permite que usuários existentes façam login
+      ═══════════════════════════════════════ -->
+      <div id="loginFormContainer" class="authFormWrapper">
+        <h2 class="formTitle">Bem-vindo de volta</h2>
+        <p class="formSubtitle">Acesse sua conta para continuar aprendendo</p>
+
+        <!-- ÁREA DE ERROS -->
+        <div id="loginErrorMessage" class="errorMessageBox" style="display: none;"></div>
+
+        <!-- CAMPO: EMAIL -->
+        <div class="formGroup">
+          <label class="formLabel" for="loginEmailInput">E-mail</label>
+          <input 
+            type="email" 
+            id="loginEmailInput"
+            class="formInput"
+            placeholder="seu@email.com"
+            aria-label="Digite seu e-mail para login"
+          >
+        </div>
+
+        <!-- CAMPO: SENHA -->
+        <div class="formGroup">
+          <label class="formLabel" for="loginPasswordInput">Senha</label>
+          <div class="passwordFieldWrapper">
+            <input 
+              type="password" 
+              id="loginPasswordInput"
+              class="formInput"
+              placeholder="Sua senha"
+              aria-label="Digite sua senha"
+            >
+            <button 
+              type="button"
+              class="passwordToggleButton" 
+              onclick="togglePasswordVisibility('loginPasswordInput')"
+              aria-label="Mostrar ou ocultar senha"
+            >
+              👁
+            </button>
+          </div>
+        </div>
+
+        <!-- LINK: ESQUECEU SENHA -->
+        <div class="forgotPasswordLink">
+          <a href="#" class="linkText">Esqueceu sua senha?</a>
+        </div>
+
+        <!-- BOTÃO: ENTRAR -->
+        <button 
+          type="button"
+          id="loginSubmitButton"
+          class="submitButton"
+          onclick="handleLoginSubmit()"
+        >
+          ➔ Entrar
+        </button>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           FORMULÁRIO DE CADASTRO
+           Permite que novos usuários se registrem
+      ═══════════════════════════════════════ -->
+      <div id="registerFormContainer" class="authFormWrapper" style="display: none;">
+        <h2 class="formTitle">Criar Conta</h2>
+        <p class="formSubtitle">Preencha seus dados para se cadastrar na plataforma</p>
+
+        <!-- ÁREA DE ERROS -->
+        <div id="registerErrorMessage" class="errorMessageBox" style="display: none;"></div>
+
+        <!-- CAMPO: NOME -->
+        <div class="formGroup">
+          <label class="formLabel" for="registerFirstNameInput">Nome</label>
+          <input 
+            type="text" 
+            id="registerFirstNameInput"
+            class="formInput"
+            placeholder="Seu nome"
+            aria-label="Digite seu primeiro nome"
+          >
+        </div>
+
+        <!-- CAMPO: SOBRENOME -->
+        <div class="formGroup">
+          <label class="formLabel" for="registerLastNameInput">Sobrenome</label>
+          <input 
+            type="text" 
+            id="registerLastNameInput"
+            class="formInput"
+            placeholder="Seu sobrenome"
+            aria-label="Digite seu sobrenome"
+          >
+        </div>
+
+        <!-- CAMPO: EMAIL -->
+        <div class="formGroup">
+          <label class="formLabel" for="registerEmailInput">E-mail</label>
+          <input 
+            type="email" 
+            id="registerEmailInput"
+            class="formInput"
+            placeholder="seu@email.com"
+            aria-label="Digite seu e-mail"
+          >
+        </div>
+
+        <!-- CAMPO: CPF -->
+        <div class="formGroup">
+          <label class="formLabel" for="registerCpfInput">CPF</label>
+          <input 
+            type="text" 
+            id="registerCpfInput"
+            class="formInput"
+            placeholder="000.000.000-00"
+            maxlength="14"
+            oninput="applyMaskCPF(this)"
+            aria-label="Digite seu CPF"
+          >
+        </div>
+
+        <!-- CAMPO: SENHA -->
+        <div class="formGroup">
+          <label class="formLabel" for="registerPasswordInput">Senha</label>
+          <div class="passwordFieldWrapper">
+            <input 
+              type="password" 
+              id="registerPasswordInput"
+              class="formInput"
+              placeholder="Mín. 8 caracteres"
+              oninput="evaluatePasswordStrength(this.value)"
+              aria-label="Digite uma senha"
+            >
+            <button 
+              type="button"
+              class="passwordToggleButton" 
+              onclick="togglePasswordVisibility('registerPasswordInput')"
+              aria-label="Mostrar ou ocultar senha"
+            >
+              👁
+            </button>
+          </div>
+          <!-- INDICADOR DE FORÇA DE SENHA -->
+          <div id="passwordStrengthIndicator" class="passwordStrengthBox" style="display: none;">
+            <div class="strengthBar">
+              <div id="strengthBarFill" class="strengthBarFill"></div>
+            </div>
+            <span id="strengthLabel" class="strengthText"></span>
+          </div>
+        </div>
+
+        <!-- CAMPO: CONFIRMAR SENHA -->
+        <div class="formGroup">
+          <label class="formLabel" for="registerConfirmPasswordInput">Confirmar Senha</label>
+          <div class="passwordFieldWrapper">
+            <input 
+              type="password" 
+              id="registerConfirmPasswordInput"
+              class="formInput"
+              placeholder="Repita a senha"
+              aria-label="Confirme sua senha"
+            >
+            <button 
+              type="button"
+              class="passwordToggleButton" 
+              onclick="togglePasswordVisibility('registerConfirmPasswordInput')"
+              aria-label="Mostrar ou ocultar senha"
+            >
+              👁
+            </button>
+          </div>
+        </div>
+
+        <!-- CHECKBOX: TERMOS DE USO -->
+        <div class="termsCheckboxContainer">
+          <input 
+            type="checkbox" 
+            id="acceptTermsCheckbox"
+            class="termsCheckbox"
+            aria-label="Aceitar Termos de Uso"
+          >
+          <label for="acceptTermsCheckbox" class="termsLabel">
+            Li e aceito os <a href="#" class="linkText">Termos de Uso</a> 
+            e a <a href="#" class="linkText">Política de Privacidade</a>
+          </label>
+        </div>
+
+        <!-- BOTÃO: CRIAR CONTA -->
+        <button 
+          type="button"
+          id="registerSubmitButton"
+          class="submitButton submitButtonPrimary"
+          onclick="handleRegisterSubmit()"
+        >
+          🚀 Criar Minha Conta
+        </button>
+      </div>
+
+      <!-- DIVIDER -->
+      <div class="dividerContainer">
+        <span class="dividerText">ou</span>
+      </div>
+
+      <!-- OPÇÕES SOCIAIS (PLACEHOLDER) -->
+      <div class="socialLoginContainer">
+        <button class="socialButtonGoogle" disabled>
+          <span>🔹</span> Continuar com Google
+        </button>
+      </div>
+
+    </div>
+
+    <!-- LADO DIREITO: BENEFÍCIOS/INFORMAÇÕES -->
+    <div class="loginBenefitsSection">
+      <div class="benefitsCard">
+        <h3 class="benefitsTitle">Sua jornada começa aqui</h3>
+        <p class="benefitsSubtitle">Junte-se a mais de 3.400+ pessoas que já despertaram seu potencial</p>
+
+        <ul class="benefitsList">
+          <li class="benefitItem">
+            <span class="benefitCheck">✓</span>
+            <span>Acesso imediato a 120+ vídeos</span>
+          </li>
+          <li class="benefitItem">
+            <span class="benefitCheck">✓</span>
+            <span>Conteúdo organizado por módulos</span>
+          </li>
+          <li class="benefitItem">
+            <span class="benefitCheck">✓</span>
+            <span>Certificado de conclusão</span>
+          </li>
+          <li class="benefitItem">
+            <span class="benefitCheck">✓</span>
+            <span>Suporte dedicado</span>
+          </li>
+          <li class="benefitItem">
+            <span class="benefitCheck">✓</span>
+            <span>Cancele quando quiser</span>
+          </li>
+        </ul>
+
+        <div class="testimonialBox">
+          <p class="testimonialText">"Essa plataforma mudou minha rotina completamente. Os conteúdos são diretos e aplicáveis."</p>
+          <div class="testimonialAuthor">
+            <div class="authorAvatar">MR</div>
+            <div class="authorInfo">
+              <strong class="authorName">Marcos R.</strong>
+              <small class="authorRole">Aluno desde 2023</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

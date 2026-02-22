@@ -1,0 +1,622 @@
+/* ============================================================
+   login/login.css
+   
+   RESPONSABILIDADE:
+   - Estilo da tela de Login/Cadastro
+   - Layout responsivo com dois painéis
+   - Componentes de formulário bem organizados
+   
+   ESTRUTURA:
+   1. Container Principal
+   2. Seção de Formulário (Esquerda)
+   3. Seção de Benefícios (Direita)
+   4. Componentes Reutilizáveis
+   5. Responsividade
+   ============================================================ */
+
+/* ═══════════════════════════════════════
+   1. CONTAINER PRINCIPAL
+═══════════════════════════════════════ */
+
+.loginContainer {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 32px;
+  align-items: center;
+  min-height: 100vh;
+  padding: 48px 32px;
+  background: var(--bg-page);
+}
+
+/* ═══════════════════════════════════════
+   2. SEÇÃO DE FORMULÁRIO (ESQUERDA)
+═══════════════════════════════════════ */
+
+.loginFormSection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 480px;
+}
+
+/* HEADER COM LOGO E MARCA */
+.loginHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.logoBox {
+  width: 60px;
+  height: 69px;
+}
+
+.logoBrand {
+  width: 100%;
+  height: 100%;
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--silver-light);
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+.brandSlogan {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--silver-mid);
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ABAS: LOGIN vs CADASTRO */
+.authTabsContainer {
+  display: flex;
+  gap: 8px;
+  background: var(--bg-card);
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.authTabButton {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.authTabButton:hover {
+  color: var(--text-primary);
+}
+
+.authTabButtonActive {
+  background: var(--bg-surface);
+  color: var(--silver-light);
+  border: 1px solid var(--border-bright);
+}
+
+/* WRAPPER DO FORMULÁRIO */
+.authFormWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.formTitle {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.formSubtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0 0 16px 0;
+}
+
+/* ═══════════════════════════════════════
+   3. COMPONENTES DE FORMULÁRIO
+═══════════════════════════════════════ */
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formLabel {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+.formInput {
+  padding: 12px 16px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: var(--silver);
+  box-shadow: 0 0 0 3px rgba(200, 200, 200, 0.1);
+}
+
+.formInput::placeholder {
+  color: var(--text-muted);
+}
+
+/* CAMPO DE SENHA COM TOGGLE */
+.passwordFieldWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordFieldWrapper .formInput {
+  padding-right: 44px;
+}
+
+.passwordToggleButton {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+  padding: 8px;
+}
+
+.passwordToggleButton:hover {
+  color: var(--text-primary);
+}
+
+/* INDICADOR DE FORÇA DE SENHA */
+.passwordStrengthBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 0;
+}
+
+.strengthBar {
+  width: 100%;
+  height: 4px;
+  background: var(--bg-input);
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.strengthBarFill {
+  height: 100%;
+  width: 0%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.strengthBarFill.weak {
+  background: var(--danger);
+  width: 33%;
+}
+
+.strengthBarFill.medium {
+  background: var(--warning);
+  width: 66%;
+}
+
+.strengthBarFill.strong {
+  background: var(--success);
+  width: 100%;
+}
+
+.strengthText {
+  font-size: 0.75rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.strengthText.weak {
+  color: var(--danger);
+}
+
+.strengthText.medium {
+  color: var(--warning);
+}
+
+.strengthText.strong {
+  color: var(--success);
+}
+
+/* LINK "ESQUECEU A SENHA" */
+.forgotPasswordLink {
+  text-align: right;
+  margin-top: 8px;
+}
+
+.linkText {
+  color: var(--silver);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.linkText:hover {
+  color: var(--silver-light);
+  text-decoration: underline;
+}
+
+/* TERMOS DE USO */
+.termsCheckboxContainer {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.termsCheckbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--silver);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.termsLabel {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+/* BOTÕES DE AÇÃO */
+.submitButton {
+  padding: 12px 24px;
+  border: 1px solid var(--border-bright);
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--bg-surface);
+  border-color: var(--silver);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submitButtonPrimary {
+  background: var(--silver);
+  color: var(--text-inverse);
+  border-color: var(--silver);
+}
+
+.submitButtonPrimary:hover:not(:disabled) {
+  background: var(--silver-light);
+  border-color: var(--silver-light);
+  box-shadow: var(--shadow-md);
+}
+
+/* MENSAGEM DE ERRO */
+.errorMessageBox {
+  padding: 12px 16px;
+  background: rgba(224, 80, 80, 0.08);
+  border: 1px solid rgba(224, 80, 80, 0.2);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius-sm);
+  color: var(--danger);
+  font-size: 0.85rem;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* DIVIDER */
+.dividerContainer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.dividerContainer::before,
+.dividerContainer::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.dividerText {
+  white-space: nowrap;
+}
+
+/* LOGIN SOCIAL */
+.socialLoginContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.socialButtonGoogle {
+  padding: 12px 24px;
+  border: 1px solid var(--border-bright);
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.socialButtonGoogle:hover:not(:disabled) {
+  background: var(--bg-surface);
+}
+
+.socialButtonGoogle:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════
+   4. SEÇÃO DE BENEFÍCIOS (DIREITA)
+═══════════════════════════════════════ */
+
+.loginBenefitsSection {
+  position: sticky;
+  top: 48px;
+}
+
+.benefitsCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.benefitsCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--grad-accent);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.benefitsTitle {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--silver-light);
+  margin: 0;
+}
+
+.benefitsSubtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.benefitsList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.benefitItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.benefitCheck {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(200, 200, 200, 0.1);
+  border: 1px solid var(--border-bright);
+  border-radius: 50%;
+  color: var(--silver-light);
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.testimonialBox {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.testimonialText {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.testimonialAuthor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.authorAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--grad-silver);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-inverse);
+  flex-shrink: 0;
+}
+
+.authorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.authorName {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.authorRole {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════
+   5. RESPONSIVIDADE
+═══════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .loginContainer {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 40px 24px;
+  }
+
+  .loginBenefitsSection {
+    position: relative;
+    top: auto;
+  }
+
+  .loginFormSection {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .loginContainer {
+    min-height: auto;
+    padding: 32px 16px;
+  }
+
+  .loginHeader {
+    margin-bottom: 24px;
+  }
+
+  .brandName {
+    font-size: 1.6rem;
+  }
+
+  .logoBox {
+    width: 50px;
+    height: 58px;
+  }
+
+  .benefitsCard {
+    padding: 24px 20px;
+  }
+
+  .benefitsTitle {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .loginContainer {
+    padding: 24px 12px;
+  }
+
+  .loginFormSection {
+    gap: 16px;
+  }
+
+  .authTabsContainer {
+    gap: 4px;
+  }
+
+  .authTabButton {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .brandName {
+    font-size: 1.3rem;
+  }
+
+  .submitButton {
+    padding: 10px 16px;
+  }
+
+  .benefitsCard {
+    display: none;
+  }
+}
