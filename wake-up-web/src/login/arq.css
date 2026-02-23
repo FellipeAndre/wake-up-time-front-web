@@ -1,0 +1,182 @@
+/* ================================================================
+   src/login/arq.css — Estilos exclusivos da view Login
+   ================================================================ */
+
+/* Centraliza o card na tela */
+.login-pagina {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  min-height:      100vh;
+  padding:         40px 20px;
+  position:        relative;
+}
+
+/* Orb decorativo */
+.login-pagina__orb {
+  position:      absolute;
+  width:         500px;
+  height:        500px;
+  border-radius: 50%;
+  background:    radial-gradient(circle, rgba(123,94,167,0.08) 0%, transparent 70%);
+  top:           50%;
+  left:          50%;
+  transform:     translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Card principal */
+.login-card {
+  width:         100%;
+  max-width:     420px;
+  background:    var(--fundo-card);
+  border:        1px solid var(--borda);
+  border-radius: var(--raio-md);
+  padding:       36px 32px;
+  position:      relative;
+  z-index:       2;
+  box-shadow:    0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,229,255,0.04);
+}
+
+/* Cabeçalho */
+.login-card__header {
+  text-align:    center;
+  margin-bottom: 28px;
+}
+.login-card__logo {
+  height:        40px;
+  margin:        0 auto 16px;
+  filter:        invert(1) brightness(2);
+}
+.login-card__titulo {
+  font-family:    var(--fonte-titulo);
+  font-size:      22px;
+  font-weight:    800;
+  color:          var(--texto-branco);
+  letter-spacing: -0.7px;
+  margin-bottom:  4px;
+}
+.login-card__sub {
+  font-size: 12px;
+  color:     var(--texto-fraco);
+}
+
+/* ---- BOTÕES DE LOGIN SOCIAL ---- */
+.login-social {
+  display:        flex;
+  flex-direction: column;
+  gap:            10px;
+  margin-bottom:  20px;
+}
+
+/* Ícone SVG dentro dos botões sociais */
+.btn-social-icone {
+  width:  18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* ---- TABS ---- */
+.tabs {
+  display:       flex;
+  background:    var(--fundo-principal);
+  border:        1px solid var(--borda);
+  border-radius: var(--raio);
+  padding:       3px;
+  margin-bottom: 22px;
+}
+.tabs__btn {
+  flex:        1;
+  padding:     9px;
+  background:  transparent;
+  border:      none;
+  color:       var(--texto-fraco);
+  font-size:   12px;
+  border-radius: var(--raio);
+  transition:  all var(--transicao);
+  cursor:      pointer;
+  font-family: var(--fonte-corpo);
+}
+.tabs__btn.ativa {
+  background:  var(--fundo-card);
+  color:       var(--texto-branco);
+  box-shadow:  0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* ---- FORMULÁRIO ---- */
+.form { display: flex; flex-direction: column; gap: 14px; }
+
+/* Campo com ícone de senha (olho) */
+.campo-senha-wrapper {
+  position: relative;
+}
+.campo-senha-wrapper .campo-input {
+  padding-right: 42px;
+}
+.campo-senha-olho {
+  position:   absolute;
+  right:      12px;
+  top:        50%;
+  transform:  translateY(-50%);
+  background: none;
+  border:     none;
+  color:      var(--texto-fraco);
+  cursor:     pointer;
+  font-size:  14px;
+  padding:    0;
+  transition: color var(--transicao);
+}
+.campo-senha-olho:hover { color: var(--acento); }
+
+/* Rodapé do formulário */
+.form__rodape {
+  text-align:  center;
+  font-size:   11px;
+  color:       var(--texto-fraco);
+  margin-top:  4px;
+}
+.form__rodape button {
+  background:  none;
+  border:      none;
+  color:       var(--acento);
+  cursor:      pointer;
+  font-family: var(--fonte-corpo);
+  font-size:   11px;
+  margin-left: 3px;
+}
+
+/* Rodapé do card (link para cadastro) */
+.login-card__footer {
+  text-align:  center;
+  margin-top:  20px;
+  font-size:   12px;
+  color:       var(--texto-fraco);
+}
+.login-card__footer button {
+  background:  none;
+  border:      none;
+  color:       var(--acento);
+  cursor:      pointer;
+  font-family: var(--fonte-corpo);
+  font-size:   12px;
+  margin-left: 4px;
+}
+.login-card__footer button:hover { opacity: 0.8; }
+
+/* Badge de redirecionamento automático */
+.badge-redirect {
+  display:        flex;
+  align-items:    center;
+  gap:            8px;
+  padding:        10px 14px;
+  background:     var(--acento-fraco);
+  border:         1px solid rgba(0,229,255,0.2);
+  border-radius:  var(--raio);
+  color:          var(--acento);
+  font-size:      12px;
+  margin-top:     4px;
+}
+
+@media (max-width: 480px) {
+  .login-card { padding: 28px 18px; }
+}

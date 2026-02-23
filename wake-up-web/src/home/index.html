@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wake Up Now — Home</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+
+  <!-- CSS global do projeto (../../ sobe duas pastas: src/home → raiz) -->
+  <link rel="stylesheet" href="../../style.css" />
+
+  <!-- CSS exclusivo desta view -->
+  <link rel="stylesheet" href="arq.css" />
+
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body style="overflow-x: hidden; background: transparent;">
+
+  <!-- Ponto de montagem do React desta view -->
+  <div id="app-home"></div>
+
+  <!--
+    ORDEM DE CARREGAMENTO:
+    1. script.js  → regras de negócio e chamadas ao backend
+    2. home.jsx   → componente React que usa as funções do script.js
+  -->
+  <script src="script.js"></script>
+  <script type="text/babel" src="home.jsx"></script>
+
+  <script>
+    /* Ativa animações de revelar após React renderizar */
+    setTimeout(function() {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry, i) {
+          if (entry.isIntersecting) {
+            setTimeout(function() { entry.target.classList.add('visivel'); }, i * 90);
+          }
+        });
+      }, { threshold: 0.08 });
+      document.querySelectorAll('.revelar').forEach(function(el) { obs.observe(el); });
+    }, 200);
+  </script>
+
+</body>
+</html>

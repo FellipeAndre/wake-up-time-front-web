@@ -1,69 +1,71 @@
 /* ============================================================
    WAKE UP NOW · Global Design System
-   Paleta: Prata Metálico · Preto Sólido · Cinza Aço
+   Paleta: Energia Vibrante — Magenta, Pink, Roxo
+   Alinhada com "Wake Up Now · Desperte seu potencial"
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600&display=swap');
 
 /* ── CSS TOKENS ── */
 :root {
-  /* Paleta Principal — extraída do logo */
-  --silver-light:   #e8e8e8;
-  --silver:         #c8c8c8;
-  --silver-mid:     #a0a8b0;
-  --silver-dark:    #7a8490;
-  --steel:          #4a5260;
-  --charcoal:       #232830;
-  --ink:            #141820;
-  --black:          #0a0c10;
+  /* Paleta Principal — Energia Vibrante */
+  --magenta-vibrant:    #ff006d;
+  --pink:               #ff1493;
+  --roxo-bright:        #9d4edd;
+  --roxo-dark:          #6b3fa0;
+  --purple-deep:        #4a2060;
+  --charcoal:           #1a0a2e;
+  --ink:                #0f0520;
+  --black:              #0a0206;
 
-  /* Gradientes metálicos */
-  --grad-silver:    linear-gradient(135deg, #d4d4d4 0%, #f0f0f0 40%, #b8b8b8 70%, #d8d8d8 100%);
-  --grad-dark:      linear-gradient(160deg, #1a1e26 0%, #0e1118 60%, #1c222e 100%);
-  --grad-hero:      linear-gradient(135deg, #0a0c10 0%, #1a2030 50%, #0d1018 100%);
-  --grad-accent:    linear-gradient(90deg, #c8c8c8, #ffffff, #a0a8b0);
+  /* Gradientes Vibrantes */
+  --grad-magenta:       linear-gradient(135deg, #ff006d 0%, #ff1493 40%, #9d4edd 70%, #6b3fa0 100%);
+  --grad-dark:          linear-gradient(160deg, #1a0a2e 0%, #0f0520 60%, #2a1a3a 100%);
+  --grad-hero:          linear-gradient(135deg, #0a0206 0%, #1a0a2e 50%, #15050f 100%);
+  --grad-accent:        linear-gradient(90deg, #ff006d, #ff1493, #9d4edd);
 
   /* Superfícies */
-  --bg-page:        #0e1118;
-  --bg-surface:     #161c26;
-  --bg-card:        #1e2534;
-  --bg-input:       #111620;
-  --bg-sidebar:     #0c1018;
+  --bg-page:            #0a0206;
+  --bg-surface:         #161019;
+  --bg-card:            #1e1529;
+  --bg-input:           #0d0710;
+  --bg-sidebar:         #0f0612;
 
   /* Bordas */
-  --border:         rgba(200,200,200,0.10);
-  --border-bright:  rgba(200,200,200,0.22);
-  --border-active:  rgba(220,220,220,0.50);
+  --border:             rgba(255, 0, 109, 0.10);
+  --border-bright:      rgba(255, 0, 109, 0.22);
+  --border-active:      rgba(255, 78, 157, 0.50);
 
   /* Textos */
-  --text-primary:   #e8eaf0;
-  --text-secondary: #9aa0b0;
-  --text-muted:     #5a6070;
-  --text-inverse:   #0a0c10;
+  --text-primary:       #f0e8ff;
+  --text-secondary:     #b89dd0;
+  --text-muted:         #7a6a9a;
+  --text-inverse:       #0a0206;
 
   /* Feedback */
-  --success:        #4caf86;
-  --warning:        #e0a030;
-  --danger:         #e05050;
+  --success:            #22c55e;
+  --warning:            #f59e0b;
+  --danger:             #ff006d;
 
   /* Tipografia */
-  --font-display:   'Rajdhani', sans-serif;
-  --font-body:      'Exo 2', sans-serif;
+  --font-display:       'Rajdhani', sans-serif;
+  --font-body:          'Exo 2', sans-serif;
 
   /* Espaçamento */
-  --sidebar-w:      260px;
-  --topbar-h:       64px;
-  --radius:         10px;
-  --radius-sm:      6px;
-  --radius-md:      10px;
-  --radius-lg:      16px;
+  --sidebar-w:          260px;
+  --topbar-h:           64px;
+  --radius:             10px;
+  --radius-sm:          6px;
+  --radius-md:          10px;
+  --radius-lg:          16px;
 
-  /* Sombras metálicas */
-  --shadow-sm:      0 2px 8px rgba(0,0,0,0.4);
-  --shadow-md:      0 6px 24px rgba(0,0,0,0.5);
-  --shadow-lg:      0 16px 48px rgba(0,0,0,0.6);
-  --shadow-silver:  0 4px 20px rgba(180,180,180,0.08);
-  --glow-silver:    0 0 30px rgba(200,200,200,0.06);
+  /* Sombras e Brilhos */
+  --shadow-sm:          0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md:          0 6px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg:          0 16px 48px rgba(0, 0, 0, 0.7);
+  --shadow-magenta:     0 4px 20px rgba(255, 0, 109, 0.15);
+  --glow-magenta:       0 0 30px rgba(255, 0, 109, 0.10);
+  --glow-roxo:          0 0 30px rgba(157, 78, 221, 0.08);
 }
 
 /* ── RESET ── */

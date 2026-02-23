@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wake Up Now — Login</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="arq.css" />
+
+  <!--
+    ================================================================
+    SDK DO GOOGLE SIGN-IN (Google Identity Services — GIS)
+    ================================================================
+    Este script carrega a biblioteca oficial do Google para login.
+
+    COMO CONFIGURAR:
+    1. Acesse: https://console.cloud.google.com
+    2. Crie um projeto → APIs e Serviços → Credenciais
+    3. Crie uma "ID do cliente OAuth 2.0" do tipo "Aplicativo da Web"
+    4. Adicione http://localhost em "Origens JavaScript autorizadas"
+    5. Copie o "ID do cliente" e substitua no script.js:
+       var GOOGLE_CLIENT_ID = 'SEU_CLIENT_ID.apps.googleusercontent.com';
+
+    O SDK expõe o objeto global "google" com os métodos de autenticação.
+    ================================================================
+  -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!--
+    ================================================================
+    SDK DA APPLE SIGN IN (Sign in with Apple JS)
+    ================================================================
+    Carrega a biblioteca oficial da Apple para autenticação.
+
+    COMO CONFIGURAR:
+    1. Acesse: https://developer.apple.com/account
+    2. Certificates, Identifiers & Profiles → Identifiers
+    3. Registre um "Services ID" com Sign In with Apple habilitado
+    4. Configure o domínio e return URL
+    5. Substitua no script.js:
+       var APPLE_CLIENT_ID = 'com.seudominio.wakeupnow';
+       var APPLE_REDIRECT_URI = 'https://seusite.com/auth/apple/callback';
+
+    O SDK expõe o objeto global "AppleID" com os métodos de auth.
+    ================================================================
+  -->
+  <script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body style="background: transparent;">
+
+  <div id="app-login"></div>
+
+  <!--
+    script.js carregado ANTES do login.jsx
+    Contém toda a lógica de autenticação (Google, Apple, e-mail/senha)
+    e as chamadas ao backend Spring Boot.
+  -->
+  <script src="script.js"></script>
+  <script type="text/babel" src="login.jsx"></script>
+
+</body>
+</html>

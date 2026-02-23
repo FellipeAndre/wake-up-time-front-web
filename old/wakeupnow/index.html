@@ -22,6 +22,15 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <!-- Babel (Para transpilar JSX) -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- API Configuration -->
+    <script>
+        // ⚙️ Configure sua URL base aqui (ou deixe como está para produção)
+        window.API_CONFIG = {
+            BASE_URL: 'http://localhost:8080/api',  // Mude para sua URL do backend
+            USE_MOCK: false  // Mude para true para usar mock (desenvolvimento)
+        };
+    </script>
 </head>
 
 <body>
@@ -38,7 +47,23 @@
         const AuthService = {
           async validateGoogleToken(googleToken) {
             try {
-              const response = await fetch('/api/auth/google', {
+              const url = window.API_CONFIG.USE_MOCK 
+                ? 'MOCK' 
+                : `${window.API_CONFIG.BASE_URL}/auth/google`;
+              
+              // 🧪 Mock para desenvolvimento
+              if (window.API_CONFIG.USE_MOCK) {
+                console.log('🧪 [MOCK] Google Auth Request');
+                await new Promise(r => setTimeout(r, 500));
+                return {
+                  success: true,
+                  isNewUser: false,
+                  user: { id: 'user-123', email: 'teste@email.com', name: 'Teste User', role: 'student' },
+                  token: 'mock-jwt-token-' + Date.now()
+                };
+              }
+
+              const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: googleToken })
@@ -53,7 +78,23 @@
 
           async validateAppleToken(appleToken) {
             try {
-              const response = await fetch('/api/auth/apple', {
+              const url = window.API_CONFIG.USE_MOCK 
+                ? 'MOCK' 
+                : `${window.API_CONFIG.BASE_URL}/auth/apple`;
+              
+              // 🧪 Mock para desenvolvimento
+              if (window.API_CONFIG.USE_MOCK) {
+                console.log('🧪 [MOCK] Apple Auth Request');
+                await new Promise(r => setTimeout(r, 500));
+                return {
+                  success: true,
+                  isNewUser: false,
+                  user: { id: 'user-456', email: 'apple@email.com', name: 'Apple User', role: 'student' },
+                  token: 'mock-jwt-token-' + Date.now()
+                };
+              }
+
+              const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: appleToken })
@@ -68,7 +109,27 @@
 
           async completeSignup(userData) {
             try {
-              const response = await fetch('/api/auth/signup', {
+              const url = window.API_CONFIG.USE_MOCK 
+                ? 'MOCK' 
+                : `${window.API_CONFIG.BASE_URL}/auth/signup`;
+              
+              // 🧪 Mock para desenvolvimento
+              if (window.API_CONFIG.USE_MOCK) {
+                console.log('🧪 [MOCK] Signup Request', userData);
+                await new Promise(r => setTimeout(r, 800));
+                return {
+                  success: true,
+                  user: { 
+                    id: 'user-' + Date.now(), 
+                    email: userData.email, 
+                    name: userData.name, 
+                    role: 'student' 
+                  },
+                  token: 'mock-jwt-token-' + Date.now()
+                };
+              }
+
+              const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)
@@ -83,7 +144,26 @@
 
           async loginEmail(email, password) {
             try {
-              const response = await fetch('/api/auth/login', {
+              const url = window.API_CONFIG.USE_MOCK 
+                ? 'MOCK' 
+                : `${window.API_CONFIG.BASE_URL}/auth/login`;
+              
+              // 🧪 Mock para desenvolvimento
+              if (window.API_CONFIG.USE_MOCK) {
+                console.log('🧪 [MOCK] Email Login Request', {email});
+                await new Promise(r => setTimeout(r, 800));
+                if (email === 'teste@email.com' && password === '123456') {
+                  return {
+                    success: true,
+                    user: { id: 'user-123', email, name: 'Teste User', role: 'student' },
+                    token: 'mock-jwt-token-' + Date.now()
+                  };
+                } else {
+                  throw new Error('Email ou senha inválidos');
+                }
+              }
+
+              const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -195,23 +275,9 @@
         // ═══════════════════════════════════════════════════════════
 
         // Logo SVG Hexágono
-        function LogoHex() {
+        function LogoImage() {
             return (
-                <svg viewBox="0 0 80 92" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,3 77,22.5 77,69.5 40,89 3,69.5 3,22.5"
-                        stroke="rgba(200,200,200,0.6)" strokeWidth="3" fill="none"/>
-                    <polygon points="40,9 71,26.5 71,65.5 40,83 9,65.5 9,26.5"
-                        stroke="rgba(200,200,200,0.25)" strokeWidth="1.5" fill="none"/>
-                    <rect x="22" y="52" width="24" height="10" rx="1" fill="rgba(200,200,200,0.7)"/>
-                    <rect x="22" y="48" width="10" height="5" rx="1" fill="rgba(200,200,200,0.7)"/>
-                    <rect x="22" y="61" width="3" height="5" rx="1" fill="rgba(200,200,200,0.5)"/>
-                    <rect x="40" y="61" width="3" height="5" rx="1" fill="rgba(200,200,200,0.5)"/>
-                    <circle cx="54" cy="38" r="6" stroke="rgba(200,200,200,0.6)" strokeWidth="2" fill="none"/>
-                    <line x1="54" y1="44" x2="54" y2="50" stroke="rgba(200,200,200,0.5)" strokeWidth="1.5"/>
-                    <circle cx="51" cy="52" r="1" fill="rgba(200,200,200,0.5)"/>
-                    <circle cx="54" cy="53" r="1" fill="rgba(200,200,200,0.5)"/>
-                    <circle cx="57" cy="52" r="1" fill="rgba(200,200,200,0.5)"/>
-                </svg>
+                <img src="./assets/wakeup-logo.jpg" alt="Wake Up Now" style={{width:'100%', height:'auto', maxWidth:'60px'}} />
             );
         }
 
@@ -223,7 +289,7 @@
                 <aside className="sidebar">
                     <div className="sidebar-brand">
                         <div className="brand-hex">
-                            <LogoHex />
+                            <LogoImage />
                         </div>
                         <div className="sidebar-brand-text">
                             <h2>wake up</h2>
@@ -314,40 +380,96 @@
             return (
                 <div className="view active home-view">
                     {/* Hero */}
-                    <section className="hero" style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'60px', alignItems:'center', padding:'80px 40px', background:'linear-gradient(135deg, rgba(200,200,200,0.05) 0%, rgba(200,200,200,0.02) 100%)'}}>
-                        <div className="hero-content">
-                            <h1 style={{fontSize:'3rem', margin:'0 0 16px 0', color:'var(--text-primary)', lineHeight:'1.2'}}>Acorde mais cedo</h1>
-                            <p style={{fontSize:'1.3rem', color:'var(--text-secondary)', margin:'0 0 32px 0', lineHeight:'1.5'}}>
-                                Aprenda técnicas comprovadas para acordar mais cedo e transformar sua vida
-                            </p>
-                            
-                            {!isAuthenticated ? (
-                                <div style={{display:'flex', gap:'16px', flexWrap:'wrap'}}>
-                                    <button onClick={onClick} className="btn btn-primary" style={{padding:'14px 32px', fontSize:'1.1rem'}}>✨ Começar agora</button>
-                                    <button className="btn btn-secondary" style={{padding:'14px 32px', fontSize:'1.1rem'}}>📖 Saber mais</button>
+                    <section className="hero" style={{padding:'120px 40px', background:'linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%)', minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden'}}>
+                        {/* Background Accent */}
+                        <div style={{position:'absolute', top:'-50%', right:'-50%', width:'800px', height:'800px', borderRadius:'50%', background:'radial-gradient(circle, rgba(200,200,200,0.03) 0%, transparent 70%)', pointerEvents:'none'}}></div>
+                        
+                        <div style={{maxWidth:'1200px', width:'100%', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'80px', alignItems:'center', position:'relative', zIndex:1}}>
+                            {/* Left Column - Copy */}
+                            <div style={{display:'flex', flexDirection:'column', gap:'32px'}}>
+                                <div>
+                                    <h2 style={{fontSize:'0.95rem', fontWeight:'600', color:'var(--silver)', textTransform:'uppercase', letterSpacing:'2px', margin:'0 0 16px 0'}}>Bem-vindo à Wake Up Now</h2>
+                                    <h1 style={{fontSize:'3.5rem', fontWeight:'700', color:'#ffffff', margin:'0 0 20px 0', lineHeight:'1.2'}}>Desperte seu potencial</h1>
+                                    <p style={{fontSize:'1.2rem', color:'rgba(200,200,200,0.8)', margin:'0', lineHeight:'1.6'}}>
+                                        A plataforma completa para quem quer acordar mais cedo, transformar sua rotina e conquistar seus objetivos com técnicas comprovadas e conteúdo de alta qualidade.
+                                    </p>
                                 </div>
-                            ) : (
-                                <div style={{background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'32px'}}>
-                                    <h2 style={{margin:'0 0 8px 0', color:'var(--silver)'}}>Bem-vindo, {user?.name}! 👋</h2>
-                                    <p style={{margin:'0 0 20px 0', color:'var(--text-secondary)'}}>Continue sua jornada de aprendizado</p>
-                                    <button className="btn btn-primary" style={{padding:'14px 32px', fontSize:'1.1rem'}}>▶ Assistir aula</button>
+
+                                <div style={{display:'flex', flexDirection:'column', gap:'16px', pt:'24px'}}>
+                                    {!isAuthenticated ? (
+                                        <>
+                                            <button onClick={onClick} className="btn btn-primary" style={{padding:'16px 40px', fontSize:'1rem', fontWeight:'600', width:'fit-content'}}>🚀 Começar Agora</button>
+                                            <p style={{fontSize:'0.9rem', color:'rgba(200,200,200,0.6)', margin:'0'}}>Acesso a 120+ vídeos • Comunidade ativa • Suporte 24/7</p>
+                                        </>
+                                    ) : (
+                                        <button className="btn btn-primary" style={{padding:'16px 40px', fontSize:'1rem', fontWeight:'600', width:'fit-content'}}>▶ Continuar Aprendizado</button>
+                                    )}
                                 </div>
-                            )}
-                        </div>
-                        <div style={{display:'flex', alignItems:'center', justifyContent:'center'}}>
-                            <div style={{fontSize:'8rem', opacity:'0.8'}}>🌅</div>
+
+                                {/* Stats */}
+                                <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'30px', marginTop:'40px', paddingTop:'40px', borderTop:'1px solid rgba(200,200,200,0.1)'}}>
+                                    <div>
+                                        <div style={{fontSize:'2rem', fontWeight:'700', color:'var(--silver)', marginBottom:'8px'}}>120+</div>
+                                        <div style={{fontSize:'0.9rem', color:'rgba(200,200,200,0.7)'}}>Vídeos exclusivos</div>
+                                    </div>
+                                    <div>
+                                        <div style={{fontSize:'2rem', fontWeight:'700', color:'var(--silver)', marginBottom:'8px'}}>5.2k+</div>
+                                        <div style={{fontSize:'0.9rem', color:'rgba(200,200,200,0.7)'}}>Alunos ativos</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Right Column - Visual */}
+                            <div style={{display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:'32px'}}>
+                                <div style={{width:'100%', maxWidth:'350px', height:'350px', borderRadius:'20px', background:'linear-gradient(135deg, rgba(255,127,80,0.15) 0%, rgba(100,149,237,0.15) 100%)', border:'2px solid var(--silver)', display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:'24px'}}>
+                                    <div style={{fontSize:'4rem'}}>📚</div>
+                                    <div style={{textAlign:'center'}}>
+                                        <h3 style={{margin:'0 0 8px 0', color:'var(--silver)', fontSize:'1.3rem'}}>Acesso Imediato</h3>
+                                        <p style={{margin:'0', color:'rgba(200,200,200,0.7)', fontSize:'0.95rem'}}>Comece seus cursos agora mesmo</p>
+                                    </div>
+                                </div>
+
+                                <div style={{display:'flex', gap:'16px', width:'100%', justifyContent:'center'}}>
+                                    <div style={{flex:1, padding:'20px', background:'rgba(200,200,200,0.05)', borderRadius:'12px', border:'1px solid rgba(200,200,200,0.1)', textAlign:'center'}}>
+                                        <div style={{fontSize:'1.8rem', marginBottom:'8px'}}>🎓</div>
+                                        <div style={{color:'rgba(200,200,200,0.8)', fontSize:'0.9rem'}}>Certificado</div>
+                                    </div>
+                                    <div style={{flex:1, padding:'20px', background:'rgba(200,200,200,0.05)', borderRadius:'12px', border:'1px solid rgba(200,200,200,0.1)', textAlign:'center'}}>
+                                        <div style={{fontSize:'1.8rem', marginBottom:'8px'}}>👥</div>
+                                        <div style={{color:'rgba(200,200,200,0.8)', fontSize:'0.9rem'}}>Comunidade</div>
+                                    </div>
+                                    <div style={{flex:1, padding:'20px', background:'rgba(200,200,200,0.05)', borderRadius:'12px', border:'1px solid rgba(200,200,200,0.1)', textAlign:'center'}}>
+                                        <div style={{fontSize:'1.8rem', marginBottom:'8px'}}>24/7</div>
+                                        <div style={{color:'rgba(200,200,200,0.8)', fontSize:'0.9rem'}}>Acesso</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </section>
 
-                    {/* Stats */}
-                    <section style={{padding:'60px 40px', background:'var(--bg-secondary)'}}>
-                        <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:'30px', maxWidth:'1200px', margin:'0 auto'}}>
-                            {stats.map((stat, idx) => (
-                                <div key={idx} style={{textAlign:'center', padding:'30px', background:'var(--bg-card)', borderRadius:'var(--radius-md)', border:'1px solid var(--border)'}}>
-                                    <div style={{fontSize:'2.5rem', fontWeight:'700', color:'var(--silver)', marginBottom:'8px'}}>{stat.value}</div>
-                                    <div style={{color:'var(--text-secondary)', fontSize:'1rem'}}>{stat.label}</div>
-                                </div>
-                            ))}
+                    {/* Features Section */}
+                    <section style={{padding:'80px 40px', background:'var(--bg-secondary)'}}>
+                        <div style={{maxWidth:'1200px', margin:'0 auto'}}>
+                            <div style={{textAlign:'center', marginBottom:'60px'}}>
+                                <h2 style={{fontSize:'2.2rem', fontWeight:'700', color:'var(--text-primary)', margin:'0 0 16px 0'}}>Por que escolher Wake Up Now?</h2>
+                                <p style={{fontSize:'1.1rem', color:'var(--text-secondary)', margin:'0'}}>Tudo que você precisa para acordar mais cedo e alcançar seus objetivos</p>
+                            </div>
+                            <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(250px, 1fr))', gap:'30px'}}>
+                                {[
+                                    {icon:'📚', title:'Conteúdo Estruturado', desc:'120+ vídeos organizados em módulos progressivos'},
+                                    {icon:'🎯', title:'Técnicas Comprovadas', desc:'Métodos baseados em pesquisa científica'},
+                                    {icon:'👥', title:'Comunidade Ativa', desc:'Apoio e interação com outros alunos'},
+                                    {icon:'📅', title:'Acesso 24/7', desc:'Aprenda no seu próprio ritmo e horário'},
+                                    {icon:'🎓', title:'Certificados', desc:'Comprovação de conclusão dos cursos'},
+                                    {icon:'💬', title:'Suporte Dedicado', desc:'Dúvidas? Nos contacte via chat ou email'}
+                                ].map((f, i) => (
+                                    <div key={i} style={{background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'32px', textAlign:'center', transition:'all 0.3s'}} onMouseEnter={(e)=>{e.currentTarget.style.borderColor='var(--silver)'; e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow='0 10px 40px rgba(200,200,200,0.1)'}} onMouseLeave={(e)=>{e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none'}}>
+                                        <div style={{fontSize:'3rem', marginBottom:'16px'}}>{f.icon}</div>
+                                        <h3 style={{margin:'0 0 12px 0', color:'var(--text-primary)', fontSize:'1.2rem'}}>{f.title}</h3>
+                                        <p style={{margin:'0', color:'var(--text-secondary)', lineHeight:'1.6'}}>{f.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </section>
 
@@ -564,7 +686,7 @@
                 <div className="view active" style={{padding:'40px'}}>
                     <div style={{maxWidth:'1200px', margin:'0 auto', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'40px'}}>
                         <div style={{display:'flex', flexDirection:'column', gap:'20px'}}>
-                            <div style={{border:'2px dashed var(--border)', borderRadius:'var(--radius-md)', padding:'40px', textAlign:'center', background:'var(--bg-secondary)', cursor:'pointer'}} onDragOver={(e)=>{e.preventDefault(); setIsDragging(true)}} onDragLeave={(e)=>{e.preventDefault(); setIsDragging(false)}} onDrop={handleDrop} style={{border:`2px dashed ${isDragging?'var(--silver)':'var(--border)'}`, borderRadius:'var(--radius-md)', padding:'40px', textAlign:'center', background: isDragging?'var(--bg-input)':'var(--bg-secondary)', cursor:'pointer', transition:'all 0.3s'}}>
+                            <div style={{border:`2px dashed ${isDragging?'var(--silver)':'var(--border)'}`, borderRadius:'var(--radius-md)', padding:'40px', textAlign:'center', background: isDragging?'var(--bg-input)':'var(--bg-secondary)', cursor:'pointer', transition:'all 0.3s'}} onDragOver={(e)=>{e.preventDefault(); setIsDragging(true)}} onDragLeave={(e)=>{e.preventDefault(); setIsDragging(false)}} onDrop={handleDrop}>
                                 {!selectedFile ? (<><div style={{fontSize:'3rem', marginBottom:'16px'}}>📹</div><h3 style={{margin:'0 0 8px 0'}}>Arrastar vídeo aqui</h3><p>ou</p><label style={{cursor:'pointer'}}><input type="file" accept="video/*" onChange={(e)=>e.target.files[0] && setSelectedFile(e.target.files[0])} style={{display:'none'}} /><span className="btn btn-sm btn-primary">Selecionar arquivo</span></label></>) : (<><div style={{display:'flex', alignItems:'center', gap:'16px', padding:'20px', background:'var(--bg-secondary)', borderRadius:'var(--radius-sm)'}}><div style={{fontSize:'2rem', color:'var(--silver)'}}>✓</div><div><p style={{margin:'0', color:'var(--text-primary)', fontWeight:'500'}}>{selectedFile.name}</p></div></div></>)}
                             </div>
                         </div>
@@ -592,13 +714,19 @@
                 setIsLoading(true);
                 setError('');
                 try {
+                    // 1️⃣ Recebe token do Google (em produção, via @react-oauth/google)
                     const mockGoogleToken = 'google_' + Date.now();
+                    
+                    // 2️⃣ Envia para backend verificar se email existe
                     const result = await window.AuthService.validateGoogleToken(mockGoogleToken);
 
+                    // 3️⃣ Email EXISTE na base → Faz login
                     if (result.success && !result.isNewUser) {
                         window.AuthService.saveAuthData(result.user, result.token);
                         window.location.reload();
-                    } else if (result.isNewUser) {
+                    } 
+                    // 4️⃣ Email NÃO EXISTE → Redireciona para cadastro com email pré-preenchido
+                    else if (result.isNewUser) {
                         sessionStorage.setItem('oauth_data', JSON.stringify({
                             email: result.userData.email,
                             name: result.userData.name,
@@ -618,13 +746,19 @@
                 setIsLoading(true);
                 setError('');
                 try {
+                    // 1️⃣ Recebe token do Apple (em produção, via AppleSignIn SDK)
                     const mockAppleToken = 'apple_' + Date.now();
+                    
+                    // 2️⃣ Envia para backend verificar se email existe
                     const result = await window.AuthService.validateAppleToken(mockAppleToken);
 
+                    // 3️⃣ Email EXISTE na base → Faz login
                     if (result.success && !result.isNewUser) {
                         window.AuthService.saveAuthData(result.user, result.token);
                         window.location.reload();
-                    } else if (result.isNewUser) {
+                    } 
+                    // 4️⃣ Email NÃO EXISTE → Redireciona para cadastro com email pré-preenchido
+                    else if (result.isNewUser) {
                         sessionStorage.setItem('oauth_data', JSON.stringify({
                             email: result.userData.email,
                             name: result.userData.name,
@@ -689,7 +823,13 @@
                         {/* Lado Direito */}
                         <div style={{padding:'60px 40px', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                             <div style={{width:'100%', maxWidth:'380px'}}>
-                                <h2 style={{marginTop:0, marginBottom:'32px', color:'var(--text-primary)', textAlign:'center'}}>Entrar na plataforma</h2>
+                                <div style={{textAlign:'center', marginBottom:'32px'}}>
+                                    <img src="./assets/wakeup-logo.jpg" alt="Wake Up Now" style={{width:'120px', height:'auto', marginBottom:'16px'}} />
+                                    <h1 style={{marginTop:'0', marginBottom:'8px', fontSize:'1.8rem', color:'var(--silver)'}}>WAKE UP NOW</h1>
+                                    <p style={{margin:'0', color:'var(--text-secondary)', fontSize:'0.95rem'}}>Desperte seu potencial</p>
+                                </div>
+                                
+                                <h2 style={{marginTop:'32px', marginBottom:'32px', color:'var(--text-primary)', textAlign:'center'}}>Entrar na plataforma</h2>
 
                                 {error && <div style={{background:'rgba(255,109,109,0.1)', color:'#ff6d6d', padding:'12px', borderRadius:'var(--radius-sm)', marginBottom:'20px', fontSize:'0.9rem'}}>{error}</div>}
 
@@ -730,6 +870,7 @@
         // SIGNUP PAGE - Completar cadastro após OAuth
         // ═══════════════════════════════════════════════════════════
         function SignupPage({ onLoginClick }) {
+            // 📧 Dados do OAuth vêm do LoginPage
             const oauthData = sessionStorage.getItem('oauth_data') ? JSON.parse(sessionStorage.getItem('oauth_data')) : null;
             const [isLoading, setIsLoading] = React.useState(false);
             const [error, setError] = React.useState('');
@@ -755,15 +896,17 @@
 
                 setIsLoading(true);
                 try {
+                    // 🔐 Envia dados completos para backend completar o cadastro
                     const result = await window.AuthService.completeSignup({
                         email: oauthData.email,
                         name: oauthData.name,
                         cpf: cpf.replace(/\D/g, ''),
                         password,
-                        provider: oauthData.provider,
-                        token: oauthData.token
+                        provider: oauthData.provider,  // 'google' ou 'apple'
+                        token: oauthData.token         // Token do OAuth
                     });
 
+                    // ✅ Cadastro sucesso → Faz login automático
                     if (result.success) {
                         window.AuthService.saveAuthData(result.user, result.token);
                         sessionStorage.removeItem('oauth_data');
@@ -822,6 +965,8 @@
                 window.setCurrentViewGlobal = setCurrentView;
             }, [setCurrentView]);
 
+            const showSidebar = !(['login', 'signup'].includes(currentView));
+
             const renderView = () => {
                 switch(currentView) {
                     case 'home': return <Home onClick={() => setCurrentView('login')} />;
@@ -849,13 +994,13 @@
 
             return (
                 <div className="app-shell">
-                    <Sidebar currentView={currentView} onNavigate={setCurrentView} />
-                    <main className="main-area">
-                        <Topbar 
+                    {showSidebar && <Sidebar currentView={currentView} onNavigate={setCurrentView} />}
+                    <main className="main-area" style={showSidebar ? {} : {width: '100%'}}>
+                        {showSidebar && <Topbar 
                             title={config.title} 
                             subtitle={config.sub}
                             actions={<></>}
-                        />
+                        />}
                         <div className="view-content">
                             {renderView()}
                         </div>

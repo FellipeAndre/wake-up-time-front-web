@@ -49,14 +49,13 @@
   margin-bottom: 32px;
 }
 
-.logoBox {
-  width: 60px;
-  height: 69px;
-}
-
-.logoBrand {
-  width: 100%;
-  height: 100%;
+.logoImage {
+  width: 120px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
 }
 
 .brandName {

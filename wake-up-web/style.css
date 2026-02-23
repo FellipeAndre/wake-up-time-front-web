@@ -1,0 +1,529 @@
+/* ================================================================
+   style.css — CSS GLOBAL DO PROJETO Wake Up Now
+   ================================================================
+   Importado em TODOS os index.html via:
+   <link rel="stylesheet" href="../../style.css" />  (nas views)
+   <link rel="stylesheet" href="style.css" />         (no root index.html)
+
+   Contém: variáveis de cor, reset, layout principal com sidebar,
+   navbar, tipografia e classes utilitárias reutilizáveis.
+   ================================================================ */
+
+/* ----------------------------------------------------------------
+   VARIÁVEIS GLOBAIS — altere aqui para mudar o tema inteiro
+   ---------------------------------------------------------------- */
+:root {
+  /* Cores de fundo */
+  --fundo-principal:    #0a0508;
+  --fundo-sidebar:      #0f0612;
+  --fundo-card:         #161019;
+  --fundo-input:        #0d0710;
+  --fundo-hover:        #1a1220;
+
+  /* Bordas */
+  --borda:              #2a1a3a;
+  --borda-foco:         #ff006d;
+
+  /* Destaques — Paleta Vibrante */
+  --acento:             #ff006d;   /* magenta principal — ENERGIA */
+  --acento-hover:       #ff1493;   /* pink mais vibrante */
+  --acento-fraco:       rgba(255, 0, 109, 0.12);
+  --roxo:               #9d4edd;   /* roxo elétrico — TRANSFORMAÇÃO */
+
+  /* Textos */
+  --texto:              #e8d9f0;   /* corpo — tom roxo suave */
+  --texto-fraco:        #6a5a8a;   /* placeholder, label */
+  --texto-branco:       #f5f0ff;   /* títulos — branco levemente roxo */
+
+  /* Status */
+  --verde:              #22c55e;
+  --vermelho:           #ff4d6d;
+  --amarelo:            #f59e0b;
+
+  /* Tipografia */
+  --fonte-titulo:       'Syne', sans-serif;
+  --fonte-corpo:        'DM Mono', monospace;
+
+  /* Layout */
+  --largura-sidebar:    240px;   /* largura da sidebar esquerda */
+  --altura-navbar:      60px;    /* altura da navbar no mobile */
+
+  /* Misc */
+  --raio:               4px;
+  --raio-md:            8px;
+  --transicao:          0.22s ease;
+  --sombra:             0 8px 32px rgba(0, 0, 0, 0.5);
+  --brilho-magenta:     0 0 20px rgba(255, 0, 109, 0.15);
+  --brilho-roxo:        0 0 20px rgba(157, 78, 221, 0.15);
+}
+
+/* ----------------------------------------------------------------
+   RESET BÁSICO
+   ---------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin:     0;
+  padding:    0;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background:  var(--fundo-principal);
+  color:       var(--texto);
+  font-family: var(--fonte-corpo);
+  font-size:   14px;
+  line-height: 1.7;
+  overflow-x:  hidden;
+  min-height:  100vh;
+}
+
+a    { color: inherit; text-decoration: none; }
+img  { max-width: 100%; display: block; }
+ul   { list-style: none; }
+button { cursor: pointer; font-family: var(--fonte-corpo); }
+input, textarea, select { font-family: var(--fonte-corpo); }
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: var(--fundo-principal); }
+::-webkit-scrollbar-thumb { background: var(--borda); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--texto-fraco); }
+
+/* Grade de fundo (decoração global) */
+body::after {
+  content:          '';
+  position:         fixed;
+  inset:            0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.02) 1px, transparent 1px);
+  background-size:  60px 60px;
+  pointer-events:   none;
+  z-index:          0;
+}
+
+/* ================================================================
+   LAYOUT PRINCIPAL — Sidebar esquerda + Conteúdo direita
+   Esta estrutura é montada pelo react.jsx raiz e refletida
+   em cada index.html das views.
+   ================================================================ */
+
+/*
+  .app-container → envolve tudo: sidebar + conteúdo.
+  display: flex → coloca sidebar e conteúdo lado a lado.
+*/
+.app-container {
+  display:   flex;
+  min-height: 100vh;
+  position:  relative;
+  z-index:   1;
+}
+
+/* ----------------------------------------------------------------
+   SIDEBAR — menu de navegação à esquerda
+   ---------------------------------------------------------------- */
+.sidebar {
+  width:          var(--largura-sidebar);
+  min-height:     100vh;
+  background:     var(--fundo-sidebar);
+  border-right:   1px solid var(--borda);
+  display:        flex;
+  flex-direction: column;
+  position:       fixed;   /* fica fixo ao rolar a página */
+  top:            0;
+  left:           0;
+  bottom:         0;
+  z-index:        100;
+  transition:     transform var(--transicao);
+}
+
+/* Logo no topo da sidebar */
+.sidebar__logo {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  padding:     24px 20px;
+  border-bottom: 1px solid var(--borda);
+}
+
+.sidebar__logo img {
+  width:  32px;
+  height: 32px;
+  object-fit: contain;
+  filter: invert(1) brightness(2); /* inverte para ficar branco */
+}
+
+.sidebar__logo-texto {
+  font-family:    var(--fonte-titulo);
+  font-size:      15px;
+  font-weight:    800;
+  color:          var(--texto-branco);
+  letter-spacing: -0.5px;
+}
+
+.sidebar__logo-texto span { color: var(--acento); }
+
+/* Navegação da sidebar */
+.sidebar__nav {
+  padding:        16px 0;
+  flex:           1;
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+}
+
+/* Label de grupo de itens (ex: "MENU", "CONTA") */
+.sidebar__grupo-label {
+  padding:        8px 20px 4px;
+  font-size:      9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color:          var(--texto-fraco);
+  margin-top:     8px;
+}
+
+/* Item de navegação individual */
+.sidebar__item {
+  display:         flex;
+  align-items:     center;
+  gap:             10px;
+  padding:         10px 20px;
+  color:           var(--texto-fraco);
+  font-size:       13px;
+  transition:      all var(--transicao);
+  border-left:     2px solid transparent; /* indicador de ativo */
+  cursor:          pointer;
+  position:        relative;
+}
+
+.sidebar__item:hover {
+  background:  var(--fundo-hover);
+  color:       var(--texto-branco);
+  border-left-color: var(--borda);
+}
+
+/* Item ativo (página atual) */
+.sidebar__item.ativo {
+  background:       var(--acento-fraco);
+  color:            var(--acento);
+  border-left-color: var(--acento);
+}
+
+.sidebar__item-icone {
+  font-size: 16px;
+  width:     20px;
+  text-align: center;
+}
+
+.sidebar__item-texto { font-size: 13px; }
+
+/* Badge de novidade/notificação */
+.sidebar__badge {
+  margin-left:   auto;
+  background:    var(--acento);
+  color:         var(--fundo-principal);
+  font-size:     9px;
+  font-weight:   700;
+  padding:       2px 6px;
+  border-radius: 10px;
+}
+
+/* Rodapé da sidebar (usuário logado) */
+.sidebar__footer {
+  padding:       16px 20px;
+  border-top:    1px solid var(--borda);
+  display:       flex;
+  align-items:   center;
+  gap:           10px;
+}
+
+.sidebar__avatar {
+  width:         32px;
+  height:        32px;
+  border-radius: 50%;
+  background:    var(--acento-fraco);
+  border:        1px solid var(--acento);
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  font-size:     12px;
+  color:         var(--acento);
+  font-weight:   700;
+  flex-shrink:   0;
+}
+
+.sidebar__usuario-nome {
+  font-size:  12px;
+  color:      var(--texto-branco);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow:    hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar__usuario-email {
+  font-size: 10px;
+  color:     var(--texto-fraco);
+  white-space: nowrap;
+  overflow:    hidden;
+  text-overflow: ellipsis;
+}
+
+/* ----------------------------------------------------------------
+   ÁREA DE CONTEÚDO PRINCIPAL (direita da sidebar)
+   ---------------------------------------------------------------- */
+.conteudo-principal {
+  margin-left:    var(--largura-sidebar); /* empurra para depois da sidebar */
+  flex:           1;
+  display:        flex;
+  flex-direction: column;
+  min-height:     100vh;
+}
+
+/* Cabeçalho da área de conteúdo (título da página + ações) */
+.conteudo-header {
+  padding:         24px 40px;
+  border-bottom:   1px solid var(--borda);
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  background:      rgba(8, 11, 16, 0.8);
+  backdrop-filter: blur(10px);
+  position:        sticky; /* fica fixo no topo ao rolar */
+  top:             0;
+  z-index:         50;
+}
+
+.conteudo-header__titulo {
+  font-family:    var(--fonte-titulo);
+  font-size:      20px;
+  font-weight:    700;
+  color:          var(--texto-branco);
+  letter-spacing: -0.5px;
+}
+
+.conteudo-header__subtitulo {
+  font-size: 12px;
+  color:     var(--texto-fraco);
+  margin-top: 2px;
+}
+
+/* Área onde o React injeta a view */
+.conteudo-view {
+  padding: 40px;
+  flex:    1;
+}
+
+/* ================================================================
+   COMPONENTES REUTILIZÁVEIS
+   ================================================================ */
+
+/* ---- BOTÕES ---- */
+.btn {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             8px;
+  padding:         11px 24px;
+  font-size:       12px;
+  letter-spacing:  0.06em;
+  font-family:     var(--fonte-corpo);
+  border:          none;
+  border-radius:   var(--raio);
+  transition:      all var(--transicao);
+  cursor:          pointer;
+  white-space:     nowrap;
+}
+
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+
+.btn-primario  { background: var(--acento); color: var(--fundo-principal); font-weight: 600; }
+.btn-primario:hover:not(:disabled) { background: var(--acento-hover); transform: translateY(-1px); box-shadow: 0 0 20px rgba(0,229,255,0.25); }
+
+.btn-secundario { background: var(--fundo-card); color: var(--texto); border: 1px solid var(--borda); }
+.btn-secundario:hover:not(:disabled) { border-color: var(--acento); color: var(--acento); transform: translateY(-1px); }
+
+.btn-perigo   { background: var(--vermelho); color: #fff; }
+.btn-perigo:hover:not(:disabled)   { opacity: 0.85; transform: translateY(-1px); }
+
+.btn-google {
+  background:  #fff;
+  color:       #1f1f1f;
+  border:      1px solid #ddd;
+  font-weight: 500;
+}
+.btn-google:hover:not(:disabled) { background: #f5f5f5; transform: translateY(-1px); }
+
+.btn-apple {
+  background:  #000;
+  color:       #fff;
+  border:      1px solid #333;
+  font-weight: 500;
+}
+.btn-apple:hover:not(:disabled) { background: #1a1a1a; transform: translateY(-1px); }
+
+.btn-lg { padding: 14px 32px; font-size: 13px; }
+.btn-sm { padding:  8px 16px; font-size: 11px; }
+.btn-bloco { width: 100%; } /* largura total do container */
+
+/* ---- INPUTS ---- */
+.campo-grupo {
+  display:        flex;
+  flex-direction: column;
+  gap:            6px;
+}
+
+.campo-label {
+  font-size:      10px;
+  color:          var(--texto-fraco);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.campo-input,
+.campo-select,
+.campo-textarea {
+  width:         100%;
+  padding:       11px 14px;
+  background:    var(--fundo-input);
+  border:        1px solid var(--borda);
+  border-radius: var(--raio);
+  color:         var(--texto-branco);
+  font-size:     13px;
+  font-family:   var(--fonte-corpo);
+  outline:       none;
+  transition:    border-color var(--transicao), box-shadow var(--transicao);
+}
+
+.campo-input:focus,
+.campo-select:focus,
+.campo-textarea:focus {
+  border-color: var(--borda-foco);
+  box-shadow:   0 0 0 3px rgba(0,229,255,0.08);
+}
+
+.campo-input::placeholder,
+.campo-textarea::placeholder { color: var(--texto-fraco); }
+
+.campo-input.erro   { border-color: var(--vermelho); }
+.campo-input.valido { border-color: var(--verde); }
+
+.campo-textarea { resize: vertical; min-height: 100px; }
+
+/* Mensagem de erro abaixo do campo */
+.campo-erro-msg {
+  font-size: 11px;
+  color:     var(--vermelho);
+  margin-top: 2px;
+}
+
+/* ---- ALERTAS / FEEDBACK ---- */
+.alerta {
+  padding:       10px 14px;
+  border-radius: var(--raio);
+  font-size:     12px;
+  display:       flex;
+  align-items:   flex-start;
+  gap:           8px;
+}
+.alerta--erro    { background: rgba(255,77,109,0.1); border: 1px solid rgba(255,77,109,0.25); color: var(--vermelho); }
+.alerta--sucesso { background: rgba(34,197,94,0.1);  border: 1px solid rgba(34,197,94,0.25);  color: var(--verde); }
+.alerta--aviso   { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); color: var(--amarelo); }
+.alerta--info    { background: var(--acento-fraco);   border: 1px solid rgba(0,229,255,0.2);   color: var(--acento); }
+
+/* ---- CARDS ---- */
+.card {
+  background:    var(--fundo-card);
+  border:        1px solid var(--borda);
+  border-radius: var(--raio-md);
+  padding:       24px;
+  transition:    border-color var(--transicao);
+}
+.card:hover { border-color: rgba(0,229,255,0.15); }
+
+/* ---- DIVISOR ---- */
+.divisor {
+  height:     1px;
+  background: var(--borda);
+  margin:     8px 0;
+}
+
+.divisor-texto {
+  display:     flex;
+  align-items: center;
+  gap:         12px;
+  color:       var(--texto-fraco);
+  font-size:   11px;
+  margin:      4px 0;
+}
+.divisor-texto::before,
+.divisor-texto::after {
+  content:    '';
+  flex:       1;
+  height:     1px;
+  background: var(--borda);
+}
+
+/* ---- BADGE ---- */
+.badge {
+  display:       inline-flex;
+  align-items:   center;
+  padding:       3px 8px;
+  border-radius: 10px;
+  font-size:     10px;
+  font-weight:   600;
+  letter-spacing: 0.05em;
+}
+.badge--acento { background: var(--acento-fraco); color: var(--acento); border: 1px solid rgba(0,229,255,0.2); }
+.badge--verde  { background: rgba(34,197,94,0.1);  color: var(--verde);  border: 1px solid rgba(34,197,94,0.2); }
+.badge--roxo   { background: rgba(123,94,167,0.1); color: var(--roxo);   border: 1px solid rgba(123,94,167,0.2); }
+
+/* ---- LOADING SPINNER ---- */
+.spinner {
+  width:         16px;
+  height:        16px;
+  border:        2px solid rgba(255,255,255,0.2);
+  border-top:    2px solid currentColor;
+  border-radius: 50%;
+  animation:     girar 0.7s linear infinite;
+  display:       inline-block;
+}
+
+@keyframes girar { to { transform: rotate(360deg); } }
+
+/* ---- ANIMAÇÃO DE REVELAR ---- */
+.revelar {
+  opacity:    0;
+  transform:  translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.revelar.visivel { opacity: 1; transform: none; }
+
+/* ================================================================
+   RESPONSIVIDADE — Mobile: sidebar vira menu hamburguer
+   ================================================================ */
+@media (max-width: 768px) {
+  /* Sidebar fica escondida por padrão no mobile */
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  /* Classe .aberta adicionada pelo react.jsx ao clicar no hamburguer */
+  .sidebar.aberta {
+    transform: translateX(0);
+    box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+  }
+
+  /* Conteúdo ocupa a tela toda no mobile */
+  .conteudo-principal {
+    margin-left: 0;
+  }
+
+  .conteudo-view {
+    padding: 20px;
+  }
+
+  .conteudo-header {
+    padding: 16px 20px;
+  }
+}
