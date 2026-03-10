@@ -1,0 +1,101 @@
+/* ================================================================
+   Input Component Styles
+   ================================================================ */
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.input__label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--texto);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input__required {
+  color: #ff6b6b;
+  margin-left: 4px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--fundo-input);
+  color: var(--texto);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-md);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: all var(--transicao);
+}
+
+.input::placeholder {
+  color: var(--texto-fraco);
+}
+
+/* ─── FOCUS STATE ─── */
+.input:focus {
+  outline: none;
+  border-color: var(--borda-foco);
+  background: var(--fundo-input);
+  box-shadow: 0 0 0 3px rgba(176, 176, 176, 0.1);
+}
+
+/* ─── ERROR STATE ─── */
+.input--error {
+  border-color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.05);
+}
+
+.input--error:focus {
+  border-color: #ff8787;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+/* ─── DISABLED STATE ─── */
+.input:disabled {
+  background: var(--fundo-card);
+  color: var(--texto-fraco);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ─── MESSAGES ─── */
+.input__error {
+  display: block;
+  font-size: 0.85rem;
+  color: #ff6b6b;
+  font-weight: 500;
+  margin-top: -4px;
+}
+
+.input__helper {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--texto-fraco);
+  margin-top: -4px;
+}
+
+/* ─── ACCESSIBILITY ─── */
+.input:focus-visible {
+  outline: 2px solid var(--acento-hover);
+  outline-offset: 2px;
+}
+
+/* ─── WCAG AA CONTRAST ─── */
+@media (prefers-contrast: more) {
+  .input {
+    border-width: 2px;
+  }
+
+  .input--error {
+    border-color: #cc0000;
+  }
+}

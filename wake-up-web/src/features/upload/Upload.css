@@ -1,0 +1,112 @@
+/* ================================================================
+   Upload Page Styles
+   ================================================================ */
+
+.upload-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: var(--fundo-principal);
+}
+
+.upload-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
+  background: var(--fundo-card);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.upload-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--acento);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.upload-subtitle {
+  font-size: 0.95rem;
+  color: var(--texto-fraco);
+  text-align: center;
+  margin-bottom: 32px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.upload-input {
+  display: none;
+}
+
+.upload-dropzone {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border: 2px dashed var(--borda);
+  border-radius: var(--raio-lg);
+  background: rgba(176, 176, 176, 0.05);
+  cursor: pointer;
+  transition: all var(--transicao);
+  text-align: center;
+}
+
+.upload-label:hover {
+  border-color: var(--acento);
+  background: rgba(176, 176, 176, 0.1);
+}
+
+.upload-input:focus-visible ~ .upload-label {
+  border-color: var(--acento);
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.upload-text {
+  font-size: 1rem;
+  color: var(--texto);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.upload-size {
+  font-size: 0.85rem;
+  color: var(--texto-fraco);
+  margin-top: 8px;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 480px) {
+  .upload-container {
+    padding: 24px;
+  }
+
+  .upload-title {
+    font-size: 1.5rem;
+  }
+
+  .upload-label {
+    padding: 24px;
+  }
+
+  .upload-icon {
+    font-size: 2rem;
+  }
+}

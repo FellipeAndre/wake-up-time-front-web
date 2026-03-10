@@ -7,22 +7,6 @@ import { useNavigate } from 'react-router-dom'
   - Renderizar estrutura comum (Sidebar + Topbar)
   - Renderizar area de conteúdo (children)
   - Disponibilizar em todas as páginas
-
-  Analogia Spring Boot:
-  - É como um Thymeleaf layout.html com th:insert
-  - Envolver todas as páginas com layout comum
-
-  Uso:
-  ```jsx
-  <Layout>
-    { content específico de cada página }
-    <Home /> ou <Login /> ou <Cadastro />
-  </Layout>
-  ```
-
-  HOC = Higher Order Component
-  - Padrão de reutilização em React
-  - Permite wrappear components com lógica/UI comum
 */
 
 export default function Layout({ children }) {
@@ -30,13 +14,13 @@ export default function Layout({ children }) {
 
   return (
     <div className="app-container">
-      {/* SIDEBAR — Navegação lateral */}
+      {/* SIDEBAR — Navegação lateral (lado direito com flex-direction: row-reverse) */}
       <Sidebar onNavigate={navigate} />
 
-      {/* CONTENT — Área principal */}
+      {/* CONTENT — Área principal (esquerda) */}
       <main className="main-content">
-        {/* TOPBAR — Barra superior */}
-        <Topbar />
+        {/* TOPBAR — Barra superior (temporariamente oculta) */}
+        {/* <Topbar /> */}
 
         {/* CONTEÚDO DA PÁGINA — Injeta children aqui */}
         <div className="page-content">
@@ -54,10 +38,10 @@ export default function Layout({ children }) {
 */
 function Sidebar({ onNavigate }) {
   const menuItems = [
-    { label: 'Home', icon: '⌂', path: '/home' },
-    { label: 'Vídeos', icon: '🎬', path: '/videos' },
-    { label: 'Upload', icon: '⬆️', path: '/upload' },
-    { label: 'Pagamento', icon: '💳', path: '/pagamento' }
+    { label: 'Home', icon: '■', path: '/home' },
+    { label: 'Vídeos', icon: '▶', path: '/videos' },
+    { label: 'Upload', icon: '▲', path: '/upload' },
+    { label: 'Pagamento', icon: '◆', path: '/pagamento' }
   ]
 
   return (

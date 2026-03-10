@@ -1,0 +1,120 @@
+/* ================================================================
+   Button Component Styles
+   ================================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--acento);
+  color: var(--fundo-principal);
+  border: 2px solid var(--acento);
+  border-radius: var(--raio-md);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transicao);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* ─── VARIANTS ─── */
+.btn--primary {
+  background: var(--acento);
+  color: var(--fundo-principal);
+  border-color: var(--acento);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--acento-hover);
+  border-color: var(--acento-hover);
+  box-shadow: 0 0 20px rgba(176, 176, 176, 0.2);
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--acento);
+  border-color: var(--acento);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: var(--acento);
+  color: var(--fundo-principal);
+}
+
+.btn--danger {
+  background: #c00;
+  color: #fff;
+  border-color: #c00;
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: #e00;
+  border-color: #e00;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--texto);
+  border-color: var(--borda);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  border-color: var(--acento);
+  color: var(--acento);
+}
+
+/* ─── SIZES ─── */
+.btn--sm {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+}
+
+.btn--md {
+  padding: 12px 24px;
+  font-size: 1rem;
+}
+
+.btn--lg {
+  padding: 16px 32px;
+  font-size: 1.125rem;
+}
+
+/* ─── FULL WIDTH ─── */
+.btn--full {
+  width: 100%;
+}
+
+/* ─── DISABLED STATE ─── */
+.btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── LOADING SPINNER ─── */
+.btn__spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── ACCESSIBILITY ─── */
+.btn:focus-visible {
+  outline: 2px solid var(--acento-hover);
+  outline-offset: 2px;
+}
+
+.btn--disabled:focus-visible {
+  outline: none;
+}

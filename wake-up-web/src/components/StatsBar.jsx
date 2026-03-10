@@ -1,47 +1,101 @@
-/*
-  components/StatsBar.jsx — Componente: Barra de Estatísticas
-
-  Responsabilidade:
-  - Renderizar estatísticas do aplicativo
-  - Exibir números em cards
-  - Nenhuma lógica de requisição
-
-  Props:
-  - dados: objeto com { totalUsuarios, alarmesCriados, etc }
-
-  Boas Práticas:
-  - Validar props com PropTypes (opcional)
-  - Ter defaults case não receba dados
-  - Componente stateless (sem useState)
-*/
-
+/**
+ * StatsBar Component - Barra de estatísticas
+ */
 export default function StatsBar({ dados }) {
-  // Validação: se não receber dados, não renderizar
-  if (!dados) {
-    return null
-  }
+  if (!dados) return null
 
   return (
-    <section className="stats-bar">
-      <div className="container stats-container">
-        <div className="stat-item revelar">
-          <div className="stat-numero">{dados.totalUsuarios || 0}</div>
-          <div className="stat-label">Usuários ativos</div>
+    <section style={{
+      padding: '40px',
+      background: '#1f1f1f',
+      borderTop: '1px solid #3a3a3a',
+      borderBottom: '1px solid #3a3a3a'
+    }}>
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '30px'
+      }}>
+        {/* Usuários */}
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            fontSize: '2.5rem',
+            fontWeight: '700',
+            color: '#b0b0b0',
+            marginBottom: '10px'
+          }}>
+            {dados.totalUsuarios?.toLocaleString() || 0}
+          </div>
+          <div style={{
+            fontSize: '0.9rem',
+            color: '#8a8a8a',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em'
+          }}>
+            Usuários Ativos
+          </div>
         </div>
 
-        <div className="stat-item revelar">
-          <div className="stat-numero">{dados.alarmesCriados || 0}</div>
-          <div className="stat-label">Alarmes criados</div>
+        {/* Alarmes */}
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            fontSize: '2.5rem',
+            fontWeight: '700',
+            color: '#b0b0b0',
+            marginBottom: '10px'
+          }}>
+            {dados.alarmesCriados?.toLocaleString() || 0}
+          </div>
+          <div style={{
+            fontSize: '0.9rem',
+            color: '#8a8a8a',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em'
+          }}>
+            Alarmes Criados
+          </div>
         </div>
 
-        <div className="stat-item revelar">
-          <div className="stat-numero">{dados.horasEconomizadas || 0}h</div>
-          <div className="stat-label">Horas recuperadas</div>
+        {/* Horas */}
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            fontSize: '2.5rem',
+            fontWeight: '700',
+            color: '#b0b0b0',
+            marginBottom: '10px'
+          }}>
+            {dados.horasEconomizadas?.toLocaleString() || 0}h
+          </div>
+          <div style={{
+            fontSize: '0.9rem',
+            color: '#8a8a8a',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em'
+          }}>
+            Horas Economizadas
+          </div>
         </div>
 
-        <div className="stat-item revelar">
-          <div className="stat-numero">⭐ {dados.avaliacaoMedia || 0}</div>
-          <div className="stat-label">Avaliação média</div>
+        {/* Avaliação */}
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            fontSize: '2.5rem',
+            fontWeight: '700',
+            color: '#b0b0b0',
+            marginBottom: '10px'
+          }}>
+            {dados.avaliacaoMedia || 0} ⭐
+          </div>
+          <div style={{
+            fontSize: '0.9rem',
+            color: '#8a8a8a',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em'
+          }}>
+            Avaliação Média
+          </div>
         </div>
       </div>
     </section>

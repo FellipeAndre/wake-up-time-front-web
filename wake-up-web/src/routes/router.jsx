@@ -1,7 +1,7 @@
-import Home from '../pages/Home'
-import Login from '../pages/Login'
-import Cadastro from '../pages/Cadastro'
-import Upload from '../pages/Upload'
+import Home from '../features/home/Home'
+import { Login, Cadastro, ForgotPassword, ResetPassword } from '../features/auth'
+import Upload from '../features/upload/Upload'
+import ProtectedRoute from '../components/ProtectedRoute'
 
 /*
   routes/router.jsx — Definição de Rotas
@@ -9,11 +9,12 @@ import Upload from '../pages/Upload'
   Responsabilidade:
   - Mapear URLs para componentes (Pages)
   - Definir estrutura de navegação
+  - Proteger rotas que exigem autenticação com ProtectedRoute
   - Suportar rotas aninhadas (nested routes)
 
   Analogia Spring Boot:
-  - É como @RequestMapping em controllers
-  - Define os endpoints da aplicação
+  - É como @RequestMapping + @RequireAuth em controllers
+  - Define os endpoints e autorização da aplicação
 
   Sintaxe React Router v6:
   ```
@@ -23,11 +24,18 @@ import Upload from '../pages/Upload'
   }
   ```
 
-  Quando user acessa /home:
-  1. Router detecta o path
-  2. Renderiza o elemento <Home />
-  3. Home.jsx carrega dados via homeService
-  4. Componentes internos (Hero, StatsBar) recebem props
+  Rotas Protegidas:
+  ```
+  {
+    path: '/upload',
+    element: <ProtectedRoute><Upload /></ProtectedRoute>
+  }
+  ```
+
+  Quando user não autenticado tenta acessar rota protegida:
+  1. ProtectedRoute detecta falta de token
+  2. Redireciona para /login
+  3. User faz login → volta para página solicitada
 */
 
 const router = [
@@ -49,8 +57,16 @@ const router = [
     element: <Cadastro />
   },
   {
+    path: '/forgot-password',
+    element: <ForgotPassword />
+  },
+  {
+    path: '/reset-password',
+    element: <ResetPassword />
+  },
+  {
     path: '/upload',
-    element: <Upload />
+    element: <ProtectedRoute><Upload /></ProtectedRoute>
   },
   {
     path: '*', // Rota 404

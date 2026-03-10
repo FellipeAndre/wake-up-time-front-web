@@ -1,0 +1,89 @@
+/* ================================================================
+   Home Page Styles
+   ================================================================ */
+
+.home-page {
+  background: var(--fundo-principal);
+  color: var(--texto);
+  min-height: 100vh;
+}
+
+/* ─── RECURSOS SECTION ─── */
+.home-recursos {
+  padding: 60px 40px;
+  background: var(--fundo-card);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.home-recursos__title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--acento);
+  margin-bottom: 40px;
+}
+
+.home-recursos__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* ─── CTA SECTION ─── */
+.home-cta {
+  padding: 60px 40px;
+  text-align: center;
+  background: var(--fundo-principal);
+  border-top: 1px solid var(--borda);
+}
+
+.home-cta__title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--acento);
+  margin-bottom: 16px;
+}
+
+.home-cta__subtitle {
+  font-size: 1.1rem;
+  color: var(--texto);
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.home-cta__buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .home-recursos {
+    padding: 40px 24px;
+  }
+
+  .home-recursos__title {
+    font-size: 1.5rem;
+  }
+
+  .home-cta {
+    padding: 40px 24px;
+  }
+
+  .home-cta__title {
+    font-size: 1.5rem;
+  }
+
+  .home-cta__buttons {
+    flex-direction: column;
+  }
+
+  .home-cta__buttons .btn {
+    width: 100%;
+  }
+}

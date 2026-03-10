@@ -7,32 +7,50 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600&display=swap');
 
+/* ════════════════════════════════════════════════════════════
+   COMPONENT STYLES — Importado aqui
+   ════════════════════════════════════════════════════════════ */
+@import './shared/components/Button.css';
+@import './shared/components/Input.css';
+@import './shared/components/PasswordInput.css';
+@import './shared/components/FormError.css';
+@import './shared/components/Hero.css';
+@import './shared/components/RecursoCard.css';
+@import './shared/components/StatsBar.css';
+
+/* ════════════════════════════════════════════════════════════
+   FEATURE STYLES
+   ════════════════════════════════════════════════════════════ */
+@import './features/auth/Login.css';
+@import './features/auth/Cadastro.css';
+@import './features/home/Home.css';
+@import './features/upload/Upload.css';
+
 /* ────────────────────────────────────────────────────────────
-   VARIÁVEIS CSS — Paleta Vibrante (Magenta, Pink, Roxo)
-   Importadas do novo design system
+   VARIÁVEIS CSS — Paleta Metálica (Prateado, Preto, Cinza)
    ──────────────────────────────────────────────────────────── */
 :root {
-  /* Cores de fundo */
-  --fundo-principal:    #0a0508;
-  --fundo-sidebar:      #0f0612;
-  --fundo-card:         #161019;
-  --fundo-input:        #0d0710;
-  --fundo-hover:        #1a1220;
+  /* Cores de fundo — Preto + Cinza Metálico */
+  --fundo-principal:    #0d0d0d;  /* Preto profundo */
+  --fundo-sidebar:      #121212;  /* Preto escuro */
+  --fundo-card:         #1f1f1f;  /* Cinza muito escuro */
+  --fundo-input:        #2a2a2a;  /* Cinza metálico escuro */
+  --fundo-hover:        #282828;  /* Cinza hover */
 
-  /* Bordas */
-  --borda:              #2a1a3a;
-  --borda-foco:         #ff006d;
+  /* Bordas — Cinza Metálico */
+  --borda:              #3a3a3a;  /* Cinza metálico médio */
+  --borda-foco:         #c0c0c0;  /* Prateado claro (foco) */
 
-  /* Destaques — Paleta Vibrante */
-  --acento:             #ff006d;   /* magenta principal */
-  --acento-hover:       #ff1493;   /* pink mais vibrante */
-  --acento-fraco:       rgba(255, 0, 109, 0.12);
-  --roxo:               #9d4edd;   /* roxo elétrico */
+  /* Destaques — Prateado Metálico */
+  --acento:             #b0b0b0;  /* Prateado principal */
+  --acento-hover:       #e0e0e0;  /* Prateado mais claro (hover) */
+  --acento-fraco:       rgba(176, 176, 176, 0.15);
+  --roxo:               #888888;  /* Cinza metálico */
 
   /* Textos */
-  --texto:              #e8d9f0;
-  --texto-fraco:        #6a5a8a;
-  --texto-branco:       #f5f0ff;
+  --texto:              #e5e5e5;  /* Cinza claro */
+  --texto-fraco:        #8a8a8a;  /* Cinza médio */
+  --texto-branco:       #f5f5f5;  /* Quase branco */
 
   /* Layout */
   --sidebar-width:      260px;
@@ -43,10 +61,10 @@
   --raio-md:            8px;
   --raio-lg:            16px;
 
-  /* Sombras */
-  --sombra:             0 8px 32px rgba(0, 0, 0, 0.5);
-  --brilho-magenta:     0 0 20px rgba(255, 0, 109, 0.15);
-  --brilho-roxo:        0 0 20px rgba(157, 78, 221, 0.15);
+  /* Sombras — Aprofundadas */
+  --sombra:             0 8px 32px rgba(0, 0, 0, 0.7);
+  --brilho-magenta:     0 0 20px rgba(176, 176, 176, 0.2);
+  --brilho-roxo:        0 0 15px rgba(136, 136, 136, 0.15);
 
   /* Transições */
   --transicao:          0.22s ease;
@@ -82,7 +100,7 @@ body {
    ──────────────────────────────────────────────────────────── */
 .app-container {
   display: flex;
-  flex-direction: row-reverse; /* Sidebar à direita */
+  flex-direction: row; /* Sidebar à esquerda, conteúdo à direita */
   height: 100vh;
   overflow: hidden;
 }
@@ -91,7 +109,7 @@ body {
 .sidebar {
   width: var(--sidebar-width);
   background: var(--fundo-sidebar);
-  border-left: 1px solid var(--borda);
+  border-right: 1px solid var(--borda);
   display: flex;
   flex-direction: column;
   padding: 24px 16px;

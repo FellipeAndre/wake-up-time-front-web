@@ -32,7 +32,7 @@ import axios from 'axios'
 */
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
   timeout: 10000, // 10 segundos
   headers: {
     'Content-Type': 'application/json'
@@ -54,17 +54,30 @@ const api = axios.create({
 */
 api.interceptors.request.use(
   (config) => {
+    console.log('[API REQUEST]', {
+      method: config.method?.toUpperCase(),
+      url: config.url,
+      baseURL: config.baseURL,
+      fullURL: config.baseURL + config.url,
+      data: config.data,
+      headers: config.headers
+    })
+
     // Busca token salvo no localStorage
     const token = localStorage.getItem('wun_token')
 
     // Se existe token, adiciona no header
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
+      console.log('[API] Token adicionado ao header')
+    } else {
+      console.log('[API] Nenhum token encontrado no localStorage')
     }
 
     return config
   },
   (error) => {
+    console.error('[API REQUEST ERROR]', error)
     return Promise.reject(error)
   }
 )
@@ -87,37 +100,46 @@ api.interceptors.request.use(
 */
 api.interceptors.response.use(
   (response) => {
+    console.log('[API RESPONSE]', {
+      status: response.status,
+      statusText: response.statusText,
+      data: response.data,
+      headers: response.headers
+    })
     // Status 2xx: enviar resposta normalmente
     return response
   },
   (error) => {
+    console.error('[API RESPONSE ERROR]', {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      message: error.message,
+      code: error.code,
+      fullError: error
+    })
+
     /*
-      Se erro 401 (Unauthorized → token expirou ou inválido)
-      1. Limpa localStorage
-      2. Redireciona para /login
-      3. Lança erro tratado
+      Se erro 401 (Unauthorized → credenciais inválidas em login)
+      Mostrar mensagem de erro (não redirecionar automaticamente)
     */
     if (error.response?.status === 401) {
-      localStorage.removeItem('wun_token')
-      localStorage.removeItem('wun_user')
-      window.location.href = '/login'
+      console.log('[API] Erro 401 - credenciais inválidas')
+      // Não redirecionar automaticamente - deixar a página mostrar mensagem de erro
+      // localStorage.removeItem('wun_token')
+      // localStorage.removeItem('wun_user')
+      // window.location.href = '/login'
     }
 
     /*
-      Se erro 403 (Forbidden → sem permissão)
-      1. Redireciona para home
-      2. Lança erro
+      Se erro 403 (Forbidden → sem permissão em rotas autenticadas)
+      Redirecionar para home apenas em rotas protegidas
     */
     if (error.response?.status === 403) {
-      window.location.href = '/'
+      console.log('[API] Erro 403 - sem permissão')
+      // Redirecionar apenas em rotas que exigem autenticação
+      // window.location.href = '/'
     }
-
-    // Log de erros (útil para debugging)
-    console.error('[API ERROR]', {
-      status: error.response?.status,
-      data: error.response?.data,
-      message: error.message
-    })
 
     return Promise.reject(error)
   }

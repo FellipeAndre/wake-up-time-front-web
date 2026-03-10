@@ -1,6 +1,7 @@
 import { useRoutes } from 'react-router-dom'
 import router from './routes/router'
 import Layout from './components/layout/Layout'
+import { AuthProvider } from './context/AuthContext'
 
 /*
   APP.JSX — Componente Raiz
@@ -21,8 +22,10 @@ export default function App() {
   const routes = useRoutes(router)
 
   return (
-    <Layout>
-      {routes}
-    </Layout>
+    <AuthProvider>
+      <Layout>
+        {routes}
+      </Layout>
+    </AuthProvider>
   )
 }

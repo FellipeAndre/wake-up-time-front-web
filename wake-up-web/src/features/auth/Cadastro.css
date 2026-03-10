@@ -1,0 +1,97 @@
+/* ================================================================
+   Cadastro Page Styles
+   ================================================================ */
+
+.cadastro-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0d0d0d 0%, #1f1f1f 100%);
+  padding: 16px;
+}
+
+.cadastro-container {
+  width: 100%;
+  max-width: 450px;
+  padding: 40px;
+  background: var(--fundo-card);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.4s ease;
+}
+
+.cadastro-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.cadastro-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--acento);
+  margin-bottom: 8px;
+}
+
+.cadastro-subtitle {
+  font-size: 0.9rem;
+  color: var(--texto-fraco);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.cadastro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.cadastro-footer {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--texto-fraco);
+}
+
+.cadastro-link {
+  background: none;
+  border: none;
+  color: var(--acento);
+  cursor: pointer;
+  font-weight: 600;
+  transition: color var(--transicao);
+}
+
+.cadastro-link:hover {
+  color: var(--acento-hover);
+  text-decoration: underline;
+}
+
+.cadastro-link:focus-visible {
+  outline: 2px solid var(--acento-hover);
+  outline-offset: 2px;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 480px) {
+  .cadastro-container {
+    padding: 24px;
+  }
+
+  .cadastro-title {
+    font-size: 1.5rem;
+  }
+}

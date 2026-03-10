@@ -1,0 +1,51 @@
+/* ================================================================
+   RecursoCard Component Styles
+   ================================================================ */
+
+.recurso-card {
+  padding: 24px;
+  background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-lg);
+  text-align: center;
+  transition: all var(--transicao);
+  cursor: pointer;
+}
+
+.recurso-card:hover {
+  border-color: var(--acento);
+  background: linear-gradient(135deg, #323232 0%, #424242 100%);
+  box-shadow: 0 0 30px rgba(176, 176, 176, 0.15);
+  transform: translateY(-4px);
+}
+
+.recurso-card__icon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.recurso-card__title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--texto);
+  margin-bottom: 12px;
+}
+
+.recurso-card__text {
+  font-size: 0.95rem;
+  color: var(--texto-fraco);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.recurso-card:hover .recurso-card__title {
+  color: var(--acento);
+}
+
+/* ─── ACCESSIBILITY ─── */
+.recurso-card:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}

@@ -1,0 +1,72 @@
+/* ================================================================
+   StatsBar Component Styles
+   ================================================================ */
+
+.stats-bar {
+  padding: 40px;
+  background: var(--fundo-principal);
+  border-top: 1px solid var(--borda);
+  border-bottom: 1px solid var(--borda);
+}
+
+.stats-bar__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+}
+
+.stats-bar__stat {
+  text-align: center;
+}
+
+.stats-bar__number {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--acento);
+  margin-bottom: 10px;
+}
+
+.stats-bar__label {
+  font-size: 0.9rem;
+  color: var(--texto-fraco);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .stats-bar {
+    padding: 30px 24px;
+  }
+
+  .stats-bar__container {
+    gap: 20px;
+  }
+
+  .stats-bar__number {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-bar {
+    padding: 20px 16px;
+  }
+
+  .stats-bar__container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .stats-bar__number {
+    font-size: 1.5rem;
+  }
+
+  .stats-bar__label {
+    font-size: 0.8rem;
+  }
+}
